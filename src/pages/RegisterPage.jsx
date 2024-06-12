@@ -18,7 +18,11 @@ const RegisterPage = () => {
             await axios.post('http://localhost:3001/users/register', { username, password, email, role, isDisabled});
             setMessage('Registration successful');
         } catch (error) {
+          if (error.response && error.response.status === 400) {
+            setMessage(error.response.data.error);
+          } else {
             setMessage('Registration failed');
+          }
         }
     }
 
