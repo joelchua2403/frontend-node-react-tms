@@ -19,6 +19,7 @@ const handleLogoutClick = () => {
     <nav>
       {isAuthenticated && (
         <>
+        <Link className='link-button' to="/profile">Profile</Link>
         <Link className='link-button' to="/">Home</Link>
         <Link className='link-button' to="/createpost">Create a Post</Link>
         {userRole === 'admin' && (

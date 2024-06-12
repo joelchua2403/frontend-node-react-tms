@@ -12,6 +12,7 @@ import AdminPage from './pages/AdminPage';
 import { Navigate } from 'react-router-dom';
 import { GroupProvider } from './context/GroupContext';
 import GroupDetail from './components/GroupDetail';
+import ProfilePage from './pages/ProfilePage';
 
 
 
@@ -35,6 +36,7 @@ return (
       <GroupProvider>
     <Navbar  />
       <Routes>
+        <Route path='/profile' element={<ProfilePage />} />
         <Route path='/' element={<Home />} />
         <Route path='/createpost' element={<CreatePost/>} />
         <Route path='/login' element={<LoginPage  />} />
