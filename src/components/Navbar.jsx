@@ -29,9 +29,12 @@ const handleLogoutClick = () => {
         {isAuthenticated ? (
             <button className='link-button' onClick={handleLogoutClick}>Logout</button>
         ) : (
+          <>
             <Link className='link-button' to="/login">Login</Link>
+            <Link className='link-button' to="/register">Register</Link>
+          </>
         )}
-        <Link className='link-button' to="/register">Register</Link>
+        
     </nav>
   )
 }
