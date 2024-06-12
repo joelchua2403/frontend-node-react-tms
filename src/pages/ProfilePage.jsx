@@ -9,6 +9,7 @@ const ProfilePage = () => {
   const [newEmail, setNewEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [message, setMessage] = useState('');
 
 
   const fetchUserInfo = async () => {
@@ -65,9 +66,10 @@ const ProfilePage = () => {
       alert('Password updated successfully');
         setCurrentPassword('');
         setNewPassword('');
+        setMessage('');
     } catch (error) {
       console.error('Failed to update password:', error);
-      alert('Failed to update password');
+      setMessage(error.response.data.error)
     }
   };
 
@@ -79,6 +81,7 @@ const ProfilePage = () => {
       <h3>User Information</h3>
       <p>Username: {userInfo.username}</p>
       <p>Email: {userInfo.email}</p>
+      <p>Role: {userInfo.role}</p>
 
       <form onSubmit={handleEmailChange}>
         <label>New Email:</label>
@@ -93,6 +96,7 @@ const ProfilePage = () => {
         <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
         <button type="submit">Update Password</button>
       </form>
+      {message && <h3>{message}</h3>}
     </div>
   );
 };

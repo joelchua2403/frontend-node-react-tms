@@ -78,15 +78,7 @@ const onEditSubmit = (e) => {
   return (
     <>
     <GroupCard />
-<Posts 
-onDelete={onDelete} 
-onEditSubmit={onEditSubmit} 
-isAuthenticated={isAuthenticated}
-posts={posts} onEdit={onEdit} 
-handleEditChange={handleEditChange} 
-isEditing={isEditing}
-editPost={editPost}
-/>
+
 </>
   );
   

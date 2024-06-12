@@ -42,7 +42,6 @@ const onSubmit = async (e) => {
             <button type="submit">Login</button>
         </form>
         {message && <h3>{message}</h3>}
-        <Link to="/forgot-password">Forgot Password?</Link>
     </div>
 
   )

@@ -10,8 +10,28 @@ const RegisterPage = () => {
     const [message, setMessage] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
 
+    const validatePassword = (password) => {
+      const minLength = 8;
+      const maxLength = 10;
+      const hasLetter = /[a-zA-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      
+      return (
+        password.length >= minLength &&
+        password.length <= maxLength &&
+        hasLetter &&
+        hasNumber &&
+        hasSpecialChar
+      );
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
+        if (!validatePassword(password)) {
+          setMessage('Password does not meet requirements. It must be 8-10 characters long and contain at least one letter, one number, and one special character.');
+            return;
+        }
         try {
             console.log('Registering user: ', username);
             console.log(password)
