@@ -11,10 +11,11 @@ const GroupDetail = () => {
   const [group, setGroup] = useState(null);
   const [posts, setPosts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [editPost, setEditPost] = useState({ id: '', title: '', content: '' });
+  const [editPost, setEditPost] = useState({ id: '', title: '', content: '', status: '' });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [postContent, setPostContent] = useState('');
   const [postTitle, setPostTitle] = useState('');
+  const [postStatus, setPostStatus] = useState('scheduled'); // Default to 'scheduled'
   const [isAuthenticated, setIsAuthenticated] = useState(true); // This should be set based on your auth logic
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const GroupDetail = () => {
     const post = {
       title: postTitle,
       content: postContent,
+      status: postStatus,
       userId,
       groupId
     };
@@ -96,7 +98,7 @@ const GroupDetail = () => {
       });
       setPosts(posts.map(post => post.id === editPost.id ? response.data : post));
       setIsEditing(false);
-      setEditPost({ id: '', title: '', content: '' });
+      setEditPost({ id: '', title: '', content: '', status: '' });
     } catch (error) {
       console.error('Error editing post', error);
     }
@@ -137,6 +139,16 @@ const GroupDetail = () => {
               onChange={(e) => setPostContent(e.target.value)}
               placeholder="Write your post here"
             />
+            <label>Status:</label>
+            <select
+              name="status"
+              value={postStatus}
+              onChange={(e) => setPostStatus(e.target.value)}
+            >
+              <option value="scheduled">Scheduled</option>
+              <option value="in development">In Development</option>
+              <option value="completed">Completed</option>
+            </select>
             <button type="submit">Post</button>
           </form>
           {isSubmitted && (
@@ -144,16 +156,47 @@ const GroupDetail = () => {
               <h3>Post Submitted!</h3>
             </div>
           )}
-          <Posts
-            isEditing={isEditing}
-            isAuthenticated={isAuthenticated}
-            editPost={editPost}
-            handleEditChange={handleEditChange}
-            onEditSubmit={onEditSubmit}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            posts={posts}
-          />
+          <div className="posts-container">
+            <div className="posts-column">
+              <h3>Scheduled</h3>
+              <Posts
+                isEditing={isEditing}
+                isAuthenticated={isAuthenticated}
+                editPost={editPost}
+                handleEditChange={handleEditChange}
+                onEditSubmit={onEditSubmit}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                posts={posts.filter(post => post.status === 'scheduled')}
+              />
+            </div>
+            <div className="posts-column">
+              <h3>In Development</h3>
+              <Posts
+                isEditing={isEditing}
+                isAuthenticated={isAuthenticated}
+                editPost={editPost}
+                handleEditChange={handleEditChange}
+                onEditSubmit={onEditSubmit}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                posts={posts.filter(post => post.status === 'in development')}
+              />
+            </div>
+            <div className="posts-column">
+              <h3>Completed</h3>
+              <Posts
+                isEditing={isEditing}
+                isAuthenticated={isAuthenticated}
+                editPost={editPost}
+                handleEditChange={handleEditChange}
+                onEditSubmit={onEditSubmit}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                posts={posts.filter(post => post.status === 'completed')}
+              />
+            </div>
+          </div>
         </>
       )}
     </div>

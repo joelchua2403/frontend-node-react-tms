@@ -3,6 +3,7 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { GroupContext } from '../context/GroupContext';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,10 +13,12 @@ const [password, setPassword] = useState('');
 const [message, setMessage] = useState('');
 const navigate = useNavigate();
 const { handleLogin } = useContext(AuthContext);
+const { fetchGroupsAndUserGroups } = useContext(GroupContext);
 const onSubmit = async (e) => {
     e.preventDefault();
     try {
       await handleLogin(username, password);
+      await fetchGroupsAndUserGroups()
       setMessage('Login successful');
     } catch (error) {
       if (error.response && error.response.status === 401) {

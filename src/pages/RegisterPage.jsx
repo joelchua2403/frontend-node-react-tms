@@ -35,7 +35,7 @@ const RegisterPage = () => {
         try {
             console.log('Registering user: ', username);
             console.log(password)
-            await axios.post('http://localhost:3001/users/register', { username, password, email, role, isDisabled});
+            await axios.post('http://localhost:3001/users/register', { username, password, email, role: 'user', isDisabled});
             setMessage('Registration successful');
         } catch (error) {
           if (error.response && error.response.status === 400) {
@@ -56,16 +56,16 @@ const RegisterPage = () => {
             <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
             <label>Email:</label>
             <input type="text" name='email' value={email} onChange={(e) => setEmail(e.target.value)} />
-            <label>Role:</label>
+            {/* <label>Role:</label>
             <select
           name="role"
           value={role}
           onChange={(e) => setRole(e.target.value)}
           required
-        >
-          <option value="user">User</option>
+        > */}
+          {/* <option value="user">User</option>
           <option value="admin">Admin</option>
-        </select>
+        </select> */}
             <button type="submit">Register</button>
         </form>
         {message && <h3>{message}</h3>}
