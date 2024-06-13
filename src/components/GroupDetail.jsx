@@ -11,6 +11,7 @@ const GroupDetail = () => {
   const [group, setGroup] = useState(null);
   const [posts, setPosts] = useState([]);
   const [postTitle, setPostTitle] = useState('');
+  const [members, setMembers] = useState([]);
   const [postContent, setPostContent] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -46,8 +47,23 @@ const GroupDetail = () => {
       }
     };
 
+    const fetchMembers = async () => {
+      try {
+        const token = Cookies.get('token');
+        const response = await axios.get(`http://localhost:3001/groups/${groupId}/members`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setMembers(response.data);
+      } catch (error) {
+        console.error('Error fetching members', error);
+      }
+    };
+
     fetchGroup();
     fetchPosts();
+    fetchMembers();
   }, [groupId]);
 
   const handlePostSubmit = async (e, status) => {
