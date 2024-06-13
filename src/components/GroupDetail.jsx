@@ -145,11 +145,7 @@ const GroupDetail = () => {
         {group && (
           <>
             <h2>{group.name}</h2>
-            {isSubmitted && (
-              <div>
-                <h3>Post Submitted!</h3>
-              </div>
-            )}
+           
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               {Object.entries(columns).map(([status, column]) => (
                 <Droppable key={status} droppableId={status}>
@@ -203,8 +199,9 @@ const GroupDetail = () => {
                                 </form>
                               ) : (
                                 <>
-                                  <h4>{post.title}</h4>
+                                  <h3><u>{post.title}</u></h3>
                                   <p>{post.content}</p>
+                                  <p><strong>Posted by:</strong> {post.user.username}</p>
                                   <button onClick={() => onEdit(post)}>Edit</button>
                                   <button onClick={() => onDelete(post.id)}>Delete</button>
                                 </>
