@@ -10,11 +10,12 @@ const GroupDetail = () => {
   const { userId } = useContext(AuthContext);
   const [group, setGroup] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [postContent, setPostContent] = useState('');
   const [postTitle, setPostTitle] = useState('');
+  const [postContent, setPostContent] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editPost, setEditPost] = useState({ id: '', title: '', content: '' });
+  const [showAddPost, setShowAddPost] = useState({ scheduled: false, 'in development': false, completed: false });
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -49,7 +50,7 @@ const GroupDetail = () => {
     fetchPosts();
   }, [groupId]);
 
-  const handlePostSubmit = async (e) => {
+  const handlePostSubmit = async (e, status) => {
     e.preventDefault();
     const token = Cookies.get('token');
     const post = {
@@ -57,7 +58,7 @@ const GroupDetail = () => {
       content: postContent,
       userId,
       groupId,
-      status: 'scheduled'
+      status: status
     };
 
     try {
@@ -70,6 +71,7 @@ const GroupDetail = () => {
       setPostTitle('');
       setPostContent('');
       setIsSubmitted(true);
+      setShowAddPost({ ...showAddPost, [status]: false });
     } catch (error) {
       console.error('Error creating post', error);
     }
@@ -143,24 +145,6 @@ const GroupDetail = () => {
         {group && (
           <>
             <h2>{group.name}</h2>
-            <form onSubmit={handlePostSubmit}>
-              <label>Title:</label>
-              <input
-                type="text"
-                name="title"
-                value={postTitle}
-                onChange={(e) => setPostTitle(e.target.value)}
-                placeholder="Title"
-              />
-              <label>Content:</label>
-              <textarea
-                name="content"
-                value={postContent}
-                onChange={(e) => setPostContent(e.target.value)}
-                placeholder="Write your post here"
-              />
-              <button type="submit">Post</button>
-            </form>
             {isSubmitted && (
               <div>
                 <h3>Post Submitted!</h3>
@@ -230,6 +214,29 @@ const GroupDetail = () => {
                         </Draggable>
                       ))}
                       {provided.placeholder}
+                      {showAddPost[status] ? (
+                        <form onSubmit={(e) => handlePostSubmit(e, status)}>
+                          <label>Title:</label>
+                          <input
+                            type="text"
+                            name="title"
+                            value={postTitle}
+                            onChange={(e) => setPostTitle(e.target.value)}
+                            placeholder="Title"
+                          />
+                          <label>Content:</label>
+                          <textarea
+                            name="content"
+                            value={postContent}
+                            onChange={(e) => setPostContent(e.target.value)}
+                            placeholder="Write your post here"
+                          />
+                          <button type="submit">Post</button>
+                          <button type="button" onClick={() => setShowAddPost({ ...showAddPost, [status]: false })}>Cancel</button>
+                        </form>
+                      ) : (
+                        <button onClick={() => setShowAddPost({ ...showAddPost, [status]: true })}>Add Post</button>
+                      )}
                     </div>
                   )}
                 </Droppable>
