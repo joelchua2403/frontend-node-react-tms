@@ -19,27 +19,6 @@ const [isEditing, setIsEditing] = useState(false);
 const [editPost, setEditPost] = useState({id:'', title:'', content:''});
 const { isAuthenticated } = useContext(AuthContext);
 
-
-useEffect(() => {
-  if (isAuthenticated) {
-    fetchPosts();
-  }
-}, []);
-
-const fetchPosts = async () => {
-  const token = Cookies.get('token');
-  try {
-    const response = await axios.get('http://localhost:3001/posts', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    setPosts(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-  
  
 
 const onDelete = async (id) => {

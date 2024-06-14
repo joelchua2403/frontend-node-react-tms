@@ -161,7 +161,12 @@ const GroupDetail = () => {
         {group && (
           <>
             <h2>{group.name}</h2>
-           
+            <h3>Members:</h3>
+            <ul>
+              {members.map((member) => (
+                <li key={member.id}>{member.username}</li>
+              ))}
+            </ul>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               {Object.entries(columns).map(([status, column]) => (
                 <Droppable key={status} droppableId={status}>
