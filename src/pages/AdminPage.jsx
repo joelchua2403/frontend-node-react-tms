@@ -62,7 +62,7 @@ const AdminPage = () => {
 
   const handleEditUser = (username) => {
     const user = users.find((user) => user.username === username);
-    setEditedUser({ ...user, groups: user.groups || [] });
+    setEditedUser({ ...user, password:'', groups: user.groups || [] });
     setEditMode(username);
   };
 
@@ -117,6 +117,9 @@ const AdminPage = () => {
       {userRole === 'admin' && (
         <>
           <h2>Users</h2>
+          {!showCreateForm && (
+            <button onClick={() => setShowCreateForm(true)}>Create User</button>
+          )}
           <table>
             <thead>
               <tr>
@@ -191,7 +194,9 @@ const AdminPage = () => {
                       <input
                         type="password"
                         name="password"
+                        placeholder=''
                         value={editedUser.password}
+                        onFocus={() => setEditedUser({ ...editedUser, password: '' })}
                         onChange={(e) => handleInputChange(e, setEditedUser)}
                       />
                     ) : (
@@ -218,17 +223,17 @@ const AdminPage = () => {
                     ) : (
                       <button onClick={() => handleEditUser(user.username)}>Edit</button>
                     )}
-                    <button onClick={() => handleDisableUser(user.username)}>
-                      {user.isDisabled ? 'Enable' : 'Disable'}
-                    </button>
+                      {user.username !== 'admin' && (
+                      <button onClick={() => handleDisableUser(user.username)}>
+                        {user.isDisabled ? 'Enable' : 'Disable'}
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {!showCreateForm && (
-            <button onClick={() => setShowCreateForm(true)}>Create User</button>
-          )}
+        
           {message && <h3>{message}</h3>}
         </>
       )}

@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 const GroupCard = () => {
   const [groupname, setGroupname] = useState('');
   const { userId } = useContext(AuthContext);
-  const { groups, setGroups, userGroupsIds, setUserGroupsIds, fetchGro } = useContext(GroupContext);
+  const { groups, setGroups, userGroupsIds, setUserGroupsIds } = useContext(GroupContext);
 
   const onSubmit = async (e) => {
     e.preventDefault();
