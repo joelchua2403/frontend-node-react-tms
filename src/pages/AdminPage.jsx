@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { GroupContext } from '../context/GroupContext';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Select from 'react-select';
 
 const AdminPage = () => {
-  const { userRole } = useContext(AuthContext);
+  const { isAdmin } = useContext(AuthContext);
+  const { groups, setGroups} = useContext(GroupContext);
+  const [groupname, setGroupname] = useState('');
   const [users, setUsers] = useState([]);
-  const [groups, setGroups] = useState([]);
   const [editMode, setEditMode] = useState(null);
   const [editedUser, setEditedUser] = useState({ username: '', email: '', password: '', groups: [] });
   const [newUser, setNewUser] = useState({ username: '', email: '', password: '', groups: [] });
@@ -62,7 +64,7 @@ const AdminPage = () => {
 
   const handleEditUser = (username) => {
     const user = users.find((user) => user.username === username);
-    setEditedUser({ ...user, password:'', groups: user.groups || [] });
+    setEditedUser({ ...user, password: '', groups: user.groups || [] });
     setEditMode(username);
   };
 
@@ -110,16 +112,44 @@ const AdminPage = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const group = { name: groupname };
+    const token = Cookies.get('token');
+
+    try {
+      const response = await axios.post('http://localhost:3001/groups', group, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setGroups([...groups, response.data]);
+      setGroupname('');
+    } catch (error) {
+      console.error('Error creating group:', error);
+    }
+  };
+
+  const onChange = (e) => {
+    setGroupname(e.target.value);
+  };
+
+
   return (
     <div>
       <h1>Admin Page</h1>
-      {userRole !== 'admin' && <h2>Access denied</h2>}
-      {userRole === 'admin' && (
+      <div>
+        <h2>Create a Group</h2>
+        <form onSubmit={onSubmit}>
+          <label>Group Name:</label>
+          <input type="text" name="groupname" value={groupname} onChange={onChange} />
+          <button type="submit">Create Group</button>
+        </form>
+      </div>
+      {!isAdmin && <h2>Access denied</h2>}
+      {isAdmin && (
         <>
           <h2>Users</h2>
-          {!showCreateForm && (
-            <button onClick={() => setShowCreateForm(true)}>Create User</button>
-          )}
           <table>
             <thead>
               <tr>
@@ -223,7 +253,7 @@ const AdminPage = () => {
                     ) : (
                       <button onClick={() => handleEditUser(user.username)}>Edit</button>
                     )}
-                      {user.username !== 'admin' && (
+                    {user.username !== 'admin' && (
                       <button onClick={() => handleDisableUser(user.username)}>
                         {user.isDisabled ? 'Enable' : 'Disable'}
                       </button>
@@ -233,7 +263,9 @@ const AdminPage = () => {
               ))}
             </tbody>
           </table>
-        
+          {!showCreateForm && (
+            <button onClick={() => setShowCreateForm(true)}>Create User</button>
+          )}
           {message && <h3>{message}</h3>}
         </>
       )}

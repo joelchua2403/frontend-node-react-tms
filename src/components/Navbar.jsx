@@ -10,7 +10,7 @@ const Navbar = () => {
   const { setUserGroupsIds } = useContext(GroupContext);
 
   const navigate = useNavigate();
-  const { userRole } = useContext(AuthContext);
+  const { isAdmin } = useContext(AuthContext);
 
   const handleLogoutClick = () => {
     handleLogout();
@@ -24,11 +24,10 @@ const Navbar = () => {
         <div className='navbar-left'>
           {isAuthenticated && (
             <>
+            <Link className='link-button' to="/">Home</Link>
               <Link className='link-button' to="/profile">Profile</Link>
-              <Link className='link-button' to="/">Home</Link>
-              <Link className='link-button' to="/createpost">Create a Post</Link>
-              {userRole === 'admin' && (
-                <Link className='link-button' to="/admin">Admin</Link>
+              {isAdmin && (
+                <Link className='link-button' to="/admin">User Management</Link>
               )}
             </>
           )}

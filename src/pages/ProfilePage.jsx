@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { AuthContext } from '../context/AuthContext';
 
 const ProfilePage = () => {
-  const { userId } = useContext(AuthContext);
+  const { username } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({ username: '', email: '' });
   const [newEmail, setNewEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -81,7 +81,6 @@ const ProfilePage = () => {
       <h3>User Information</h3>
       <p>Username: {userInfo.username}</p>
       <p>Email: {userInfo.email}</p>
-      <p>Role: {userInfo.role}</p>
 
       <form onSubmit={handleEmailChange}>
         <label>New Email:</label>
