@@ -77,14 +77,16 @@ const ApplicationPage = () => {
         },
       });
       fetchTasks();
-      setIsTaskModalOpen(false);
     } catch (error) {
       console.error('Error updating task:', error);
     }
   };
   
 
-
+const handleCloseTaskModal = async () => {
+    setSelectedTask(null);
+    setIsTaskModalOpen(false);
+    };
 
   const handleOpenTaskModal = (task) => {
     setSelectedTask(task);
@@ -98,7 +100,7 @@ const ApplicationPage = () => {
         <p>It is an application about zoo and the animals</p>
         <TaskModal
           isOpen={isTaskModalOpen}
-          onRequestClose={() => setIsTaskModalOpen(false)}
+          onRequestClose={handleCloseTaskModal}
           onCreate={handleCreateTask}
           onSave={handleSaveTask}
           app_acronym={app_acronym}
