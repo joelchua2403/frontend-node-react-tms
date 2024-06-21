@@ -3,29 +3,12 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const PlanModal = ({ isOpen, onRequestClose, appAcronym }) => {
-  const [plans, setPlans] = useState([]);
+const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setPlans }) => {
+  
   const [newPlanName, setNewPlanName] = useState('');
   const [newPlanStartDate, setNewPlanStartDate] = useState('');
   const [newPlanEndDate, setNewPlanEndDate] = useState('');
-
-  useEffect(() => {
-    const fetchPlans = async () => {
-      const token = Cookies.get('token');
-      try {
-        const response = await axios.get(`http://localhost:3001/plans/${appAcronym}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setPlans(response.data);
-      } catch (error) {
-        console.error('Error fetching plans:', error);
-      }
-    };
-    fetchPlans();
-  }, [appAcronym]);
-
+  
   const handleCreatePlan = async () => {
     const token = Cookies.get('token');
     try {
@@ -43,10 +26,10 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym }) => {
           },
         }
       );
-      setPlans([...plans, response.data]);
       setNewPlanName('');
       setNewPlanStartDate('');
       setNewPlanEndDate('');
+      fetchPlans();
     } catch (error) {
       console.error('Error creating plan:', error);
     }

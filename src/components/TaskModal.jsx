@@ -5,17 +5,16 @@ import Cookies from 'js-cookie';
 import { format } from 'date-fns';
 import { AuthContext } from '../context/AuthContext';
 
-const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym }) => {
+
+const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym, plans }) => {
   const [taskName, setTaskName] = useState(task ? task.Task_name : '');
   const [taskDescription, setTaskDescription] = useState(task ? task.Task_description : '');
   const [taskNotes, setTaskNotes] = useState('');
   const [existingNotes, setExistingNotes] = useState(task ? task.Task_notes : '');
-  const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(task ? task.Task_plan : '');
   const { userId } = useContext(AuthContext);
 
   useEffect(() => {
-    console.log('user:', userId);
     if (task) {
       setTaskName(task.Task_name);
       setTaskDescription(task.Task_description);
@@ -29,22 +28,6 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     }
   }, [task]);
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      const token = Cookies.get('token');
-      try {
-        const response = await axios.get(`http://localhost:3001/plans/${app_acronym}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setPlans(response.data);
-      } catch (error) {
-        console.error('Error fetching plans:', error);
-      }
-    };
-    fetchPlans();
-  }, [app_acronym]);
 
   const handleAddNote = () => {
     const newNote = `${new Date().toISOString()}: [${userId}] ${taskNotes}`;
@@ -54,22 +37,33 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
         ...task,
         Task_name: taskName ? taskName : task.Task_name,
         Task_description: taskDescription ? taskDescription : task.Task_description,
-        Task_plan: selectedPlan ? selectedPlan : task.Task_plan,
-        Task_notes: `${existingNotes}\n${newNote}`,
-      };
+        Task_notes: `${existingNotes}\n${newNote}`
+    };
+    if (selectedPlan) {
+        newTask.Task_plan = selectedPlan;
+      } else {
+        newTask.Task_plan = task ? task.Task_plan || '' : '';
+      }
+  
       onSave(newTask);
   };
 
-  const handleSave = (action = 'saved changes') => {
+  const handleSave = (newState, action = 'saved changes') => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId}  ${action}  ${taskName || task.Task_name}`;
     const updatedNotes = `${existingNotes}\n${formattedNote}`;  
     const newTask = {
-      ...task,
-      Task_name: taskName ? taskName : task.Task_name,
-      Task_description: taskDescription ? taskDescription : task.Task_description,
-      Task_plan: selectedPlan ? selectedPlan : task.Task_plan,
-      Task_notes: `${existingNotes}\n${formattedNote}`,
-    };
+        ...task,
+        Task_name: taskName ? taskName : task.Task_name,
+        Task_description: taskDescription ? taskDescription : task.Task_description,
+        Task_notes: updatedNotes,
+        Task_state: newState,
+      };
+    
+      if (selectedPlan) {
+        newTask.Task_plan = selectedPlan;
+      } else {
+        newTask.Task_plan = task ? task.Task_plan || '' : '';
+      }
     onSave(newTask);
     setTaskNotes('');
     setExistingNotes(updatedNotes);
@@ -78,27 +72,29 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   const handleCreate = () => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || task.Task_name}`;
     const updatedNotes = `${existingNotes}\n${formattedNote}`;  
+    
     const newTask = {
-      ...task,
-      Task_name: taskName ? taskName : task.Task_name,
-      Task_description: taskDescription ? taskDescription : task.Task_description,
-      Task_plan: selectedPlan ? selectedPlan : task.Task_plan,
-      Task_notes: `${existingNotes}\n${formattedNote}`,
-    };
+        ...task,
+        Task_name: taskName ? taskName : task.Task_name,
+        Task_description: taskDescription ? taskDescription : task.Task_description,
+        Task_notes: updatedNotes,
+      };
+  
+      if (selectedPlan) {
+        newTask.Task_plan = selectedPlan;
+      } else {
+        newTask.Task_plan = task ? task.Task_plan || '' : '';
+      }
+  
     onCreate(newTask);
     setTaskNotes('');
     setExistingNotes(updatedNotes);
     };
 
     const handleStateChange = (newState, action) => {
-        handleSave(action);
-        onSave({ ...task, Task_state: newState });
+        handleSave(newState, action);
       };
 
-//   const formatNote = (note) => {
-//     const [timestamp, ...text] = note.split(': ');
-//     return `${format(new Date(timestamp), 'dd-MM-yyyy HH:mm:ss')}: ${text.join(': ')}`;
-//   };
 
   return (
     <Modal

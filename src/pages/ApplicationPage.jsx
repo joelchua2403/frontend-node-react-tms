@@ -15,7 +15,6 @@ const ApplicationPage = () => {
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
 
-  useEffect(() => {
     const fetchPlans = async () => {
         
         const token = Cookies.get('token');
@@ -30,9 +29,9 @@ const ApplicationPage = () => {
           console.error('Error fetching plans:', error);
         }
       };
-      fetchPlans();
-  
 
+  useEffect(() => {
+      fetchPlans();
     fetchTasks();
   }, [app_acronym]);
 
@@ -106,11 +105,14 @@ const handleCloseTaskModal = async () => {
           app_acronym={app_acronym}
           plans={plans}
           task={selectedTask}
+          setPlans={setPlans}
         />
           <PlanModal
           isOpen={isPlanModalOpen}
           onRequestClose={() => setIsPlanModalOpen(false)}
           appAcronym={app_acronym}
+          fetchPlans={fetchPlans}
+            plans={plans}
         />
         <div className="buttons">
           <button onClick={() => setIsTaskModalOpen(true)}>Create Task</button>
