@@ -13,6 +13,7 @@ const ApplicationPage = () => {
     const [plans, setPlans] = useState([]);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -30,27 +31,29 @@ const ApplicationPage = () => {
         }
       };
       fetchPlans();
-    const fetchTasks = async () => {
-      const token = Cookies.get('token');
-      try {
-        const response = await axios.get(`http://localhost:3001/tasks/${app_acronym}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setTasks(response.data);
-        console.log("tasks:", tasks)
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      }
-    };
+  
 
     fetchTasks();
   }, [app_acronym]);
 
-  const states = ['open', 'To-Do', 'Doing', 'Done', 'Closed'];
+  const fetchTasks = async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get(`http://localhost:3001/tasks/${app_acronym}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks(response.data);
+      console.log("tasks:", tasks)
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
 
-  const handleSaveTask = async (task) => {
+  const states = ['open', 'to-do', 'doing', 'done', 'closed'];
+
+  const handleCreateTask = async (task) => {
     const token = Cookies.get('token');
     try {
       const response = await axios.post(`http://localhost:3001/tasks/create`, { ...task, app_acronym }, {
@@ -65,6 +68,29 @@ const ApplicationPage = () => {
     }
   };
 
+  const handleSaveTask = async (task) => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.put(`http://localhost:3001/tasks/${task.Task_id}`, task, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchTasks();
+      setIsTaskModalOpen(false);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+  
+
+
+
+  const handleOpenTaskModal = (task) => {
+    setSelectedTask(task);
+    setIsTaskModalOpen(true);
+  };
+
   return (
     <div className="application-page">
       <div className="header">
@@ -73,9 +99,11 @@ const ApplicationPage = () => {
         <TaskModal
           isOpen={isTaskModalOpen}
           onRequestClose={() => setIsTaskModalOpen(false)}
+          onCreate={handleCreateTask}
           onSave={handleSaveTask}
           app_acronym={app_acronym}
           plans={plans}
+          task={selectedTask}
         />
           <PlanModal
           isOpen={isPlanModalOpen}
@@ -92,7 +120,7 @@ const ApplicationPage = () => {
           <div key={state} className="column">
             <h2>{state}</h2>
             {tasks.filter(task => task.Task_state === state).map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} onOpenTask={handleOpenTaskModal}/>
             ))}
           </div>
         ))}
