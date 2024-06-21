@@ -142,7 +142,7 @@ const AdminPage = () => {
         <h2>Create a Group</h2>
         <form onSubmit={onSubmit}>
           <label>Group Name:</label>
-          <input type="text" name="groupname" value={groupname} onChange={onChange} />
+          <input style={{ width: '50%' }}   type="text" name="groupname" value={groupname} onChange={onChange} />
           <button type="submit">Create Group</button>
         </form>
       </div>
@@ -150,6 +150,9 @@ const AdminPage = () => {
       {isAdmin && (
         <>
           <h2>Users</h2>
+          {!showCreateForm && (
+            <button onClick={() => setShowCreateForm(true)}>Create User</button>
+          )}
           <table>
             <thead>
               <tr>
@@ -263,9 +266,7 @@ const AdminPage = () => {
               ))}
             </tbody>
           </table>
-          {!showCreateForm && (
-            <button onClick={() => setShowCreateForm(true)}>Create User</button>
-          )}
+         
           {message && <h3>{message}</h3>}
         </>
       )}
