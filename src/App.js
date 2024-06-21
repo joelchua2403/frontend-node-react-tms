@@ -13,6 +13,7 @@ import { Navigate } from 'react-router-dom';
 import { GroupProvider } from './context/GroupContext';
 import GroupDetail from './components/GroupDetail';
 import ProfilePage from './pages/ProfilePage';
+import ApplicationPage from './pages/ApplicationPage';
 
 
 
@@ -41,6 +42,7 @@ return (
         <Route path='/createpost' element={<CreatePost/>} />
         <Route path='/login' element={<LoginPage  />} />
         <Route path='/register' element={<RegisterPage/>} />
+        <Route path='/application/:app_acronym' element={<ApplicationPage />} />
         <Route
           path='/admin'
           element={<ProtectedRoute role='admin'><AdminPage /></ProtectedRoute>}

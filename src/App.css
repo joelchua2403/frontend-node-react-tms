@@ -55,34 +55,47 @@ button.link-button:hover {
   margin-top: 20px;
 }
 
-.posts-column {
-  background-color: #f8f8f8;
+.application-page {
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.posts-grid {
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.buttons {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 10px;
+  margin-top: 10px;
 }
 
-.post {
-  background-color: #ffffff;
+.columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 1;
+  margin: 0 10px;
+  border: 1px solid #ccc;
   padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
 }
 
-.post .title {
-  font-size: 1.2em;
-  margin-bottom: 10px;
+.column h2 {
+  text-align: center;
 }
 
-.post .content {
-  margin-bottom: 10px;
+.task-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
+
 
 button {
   background-color: #026aa7;
@@ -98,3 +111,132 @@ button:hover {
   background-color: #005792;
 }
 
+.container {
+  padding: 20px;
+  text-align: center;
+}
+
+.app-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.app-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.task {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  width: 700px; /* Increase width to accommodate two columns */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.task-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-column,
+.right-column {
+  width: 48%; /* Adjust width to fit within modal */
+}
+
+.left-column div,
+.right-column div {
+  margin-bottom: 15px;
+}
+
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.existing-notes {
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 250px; /* Adjust height as needed */
+  overflow-y: auto;
+  margin-bottom: 10px;
+  flex-grow: 1;
+}
+
+.note {
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: auto; /* Push to the bottom */
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.plans-table {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.plans-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.plans-table th, .plans-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.plans-table th {
+  background-color: #f2f2f2;
+}
+
+.create-plan {
+  margin-top: 20px;
+}
+
+.create-plan label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.create-plan input {
+  width: calc(100% - 10px);
+  margin-bottom: 10px;
+  padding: 5px;
+}
