@@ -4,6 +4,7 @@ import { GroupContext } from '../context/GroupContext';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Select from 'react-select';
+import Styles from '../styles/AdminPage.css';
 
 const AdminPage = () => {
   const { isAdmin } = useContext(AuthContext);
@@ -52,6 +53,19 @@ const AdminPage = () => {
     );
     fetchUsers();
   };
+
+  const handleEnableUser = async (username) => {
+    const token = Cookies.get('token');
+    await axios.patch(
+      `http://localhost:3001/users/${username}/enable`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    fetchUsers();
+  };
+
 
   const handleInputChange = (e, setFunction) => {
     const { name, value } = e.target;
@@ -136,13 +150,13 @@ const AdminPage = () => {
 
 
   return (
-    <div>
+    <div className="admin-page">
       <h1>Admin Page</h1>
       <div>
         <h2>Create a Group</h2>
         <form onSubmit={onSubmit}>
           <label>Group Name:</label>
-          <input style={{ width: '50%' }}   type="text" name="groupname" value={groupname} onChange={onChange} />
+          <input style={{ width: '50%' }} type="text" name="groupname" value={groupname} onChange={onChange} />
           <button type="submit">Create Group</button>
         </form>
       </div>
@@ -150,123 +164,133 @@ const AdminPage = () => {
       {isAdmin && (
         <>
           <h2>Users</h2>
+         
+          <div className='admin-table-container'>
           {!showCreateForm && (
             <button onClick={() => setShowCreateForm(true)}>Create User</button>
           )}
-          <table>
-            <thead>
-              <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>isDisabled</th>
-                <th>Groups</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {showCreateForm && (
+            <table>
+              <thead>
                 <tr>
-                  <td>
-                    <input
-                      type="text"
-                      name="username"
-                      value={newUser.username}
-                      onChange={(e) => handleInputChange(e, setNewUser)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="email"
-                      value={newUser.email}
-                      onChange={(e) => handleInputChange(e, setNewUser)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="password"
-                      name="password"
-                      value={newUser.password}
-                      onChange={(e) => handleInputChange(e, setNewUser)}
-                    />
-                  </td>
-                  <td> - </td>
-                  <td>
-                    <Select
-                      isMulti
-                      name="groups"
-                      options={groups.map(group => ({ value: group.name, label: group.name }))}
-                      value={newUser.groups.map(group => ({ value: group, label: group }))}
-                      onChange={(selectedOptions) => handleGroupChange(selectedOptions, setNewUser)}
-                    />
-                  </td>
-                  <td>
-                    <button onClick={handleCreateUser}>Save</button>
-                    <button onClick={() => setShowCreateForm(false)}>Cancel</button>
-                  </td>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Password</th>
+                  <th>isDisabled</th>
+                  <th>Groups</th>
+                  <th>Actions</th>
                 </tr>
-              )}
-              {users.map((user) => (
-                <tr key={user.username}>
-                  <td>{user.username}</td>
-                  <td>
-                    {editMode === user.username ? (
+              </thead>
+              <tbody>
+                {showCreateForm && (
+                  <tr>
+                    <td>
+                      <input
+                        type="text"
+                        name="username"
+                        value={newUser.username}
+                        onChange={(e) => handleInputChange(e, setNewUser)}
+                      />
+                    </td>
+                    <td>
                       <input
                         type="text"
                         name="email"
-                        value={editedUser.email}
-                        onChange={(e) => handleInputChange(e, setEditedUser)}
+                        value={newUser.email}
+                        onChange={(e) => handleInputChange(e, setNewUser)}
                       />
-                    ) : (
-                      user.email
-                    )}
-                  </td>
-                  <td>
-                    {editMode === user.username ? (
+                    </td>
+                    <td>
                       <input
                         type="password"
                         name="password"
-                        placeholder=''
-                        value={editedUser.password}
-                        onFocus={() => setEditedUser({ ...editedUser, password: '' })}
-                        onChange={(e) => handleInputChange(e, setEditedUser)}
+                        value={newUser.password}
+                        onChange={(e) => handleInputChange(e, setNewUser)}
                       />
-                    ) : (
-                      '******'
-                    )}
-                  </td>
-                  <td>{user.isDisabled ? 'Yes' : 'No'}</td>
-                  <td>
-                    {editMode === user.username ? (
+                    </td>
+                    <td> - </td>
+                    <td>
                       <Select
                         isMulti
                         name="groups"
                         options={groups.map(group => ({ value: group.name, label: group.name }))}
-                        value={editedUser.groups.map(group => ({ value: group, label: group }))}
-                        onChange={(selectedOptions) => handleGroupChange(selectedOptions, setEditedUser)}
+                        value={newUser.groups.map(group => ({ value: group, label: group }))}
+                        onChange={(selectedOptions) => handleGroupChange(selectedOptions, setNewUser)}
                       />
-                    ) : (
-                      user.groups && user.groups.join(', ')
-                    )}
-                  </td>
-                  <td>
-                    {editMode === user.username ? (
-                      <button onClick={handleSaveUser}>Save</button>
-                    ) : (
-                      <button onClick={() => handleEditUser(user.username)}>Edit</button>
-                    )}
-                    {user.username !== 'admin' && (
-                      <button onClick={() => handleDisableUser(user.username)}>
-                        {user.isDisabled ? 'Enable' : 'Disable'}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-         
+                    </td>
+                    <td>
+                      <button onClick={handleCreateUser}>Save</button>
+                      <button onClick={() => setShowCreateForm(false)}>Cancel</button>
+                    </td>
+                  </tr>
+                )}
+                {users.map((user) => (
+                  <tr key={user.username}>
+                    <td>{user.username}</td>
+                    <td>
+                      {editMode === user.username ? (
+                        <input
+                          type="text"
+                          name="email"
+                          value={editedUser.email}
+                          onChange={(e) => handleInputChange(e, setEditedUser)}
+                        />
+                      ) : (
+                        user.email
+                      )}
+                    </td>
+                    <td>
+                      {editMode === user.username ? (
+                        <input
+                          type="password"
+                          name="password"
+                          placeholder=''
+                          value={editedUser.password}
+                          onFocus={() => setEditedUser({ ...editedUser, password: '' })}
+                          onChange={(e) => handleInputChange(e, setEditedUser)}
+                        />
+                      ) : (
+                        '******'
+                      )}
+                    </td>
+                    <td>{user.isDisabled ? 'Yes' : 'No'}</td>
+                    <td>
+                      {editMode === user.username ? (
+                        <Select
+                          isMulti
+                          name="groups"
+                          options={groups.map(group => ({ value: group.name, label: group.name }))}
+                          value={editedUser.groups.map(group => ({ value: group, label: group }))}
+                          onChange={(selectedOptions) => handleGroupChange(selectedOptions, setEditedUser)}
+                        />
+                      ) : (
+                        user.groups && user.groups.join(', ')
+                      )}
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        {editMode === user.username ? (
+                          <button onClick={handleSaveUser}>Save</button>
+                        ) : (
+                          <button onClick={() => handleEditUser(user.username)}>Edit</button>
+                        )}
+                        {user.username !== 'admin' && (
+                          user.isDisabled ? (
+                            <button onClick={() => handleEnableUser(user.username)}>
+                              Enable
+                            </button>
+                          ) : (
+                            <button onClick={() => handleDisableUser(user.username)}>
+                              Disable
+                            </button>
+                          )
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {message && <h3>{message}</h3>}
         </>
       )}
