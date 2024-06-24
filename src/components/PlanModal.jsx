@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Styles from '../styles/PlanModal.css';
 
 const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setPlans }) => {
   
@@ -26,6 +27,7 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setP
           },
         }
       );
+    //   setPlans([...plans, response.data]);
       setNewPlanName('');
       setNewPlanStartDate('');
       setNewPlanEndDate('');
@@ -44,7 +46,7 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setP
       overlayClassName="overlay"
     >
       <h2>Plans</h2>
-      <div className="plans-table">
+      <div className="plan-list">
         <table>
           <thead>
             <tr>
