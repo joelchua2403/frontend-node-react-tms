@@ -1,13 +1,15 @@
 import '../App.css';
 import ApplicationCard from '../components/ApplicationCard';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import ApplicationModal from '../components/ApplicationModal';
+import { AuthContext } from '../context/AuthContext';
 
 function Home() {
   const [applications, setApplications] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isProjectLead } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -46,7 +48,9 @@ function Home() {
   return (
     <div className="container">
       <h1 style={{ textAlign: 'center' }}>Applications</h1>
-      <button onClick={() => setIsModalOpen(true)}>Create App</button>
+      {isProjectLead && (
+        <button onClick={() => setIsModalOpen(true)}>Create App</button>
+      )}
       <ApplicationModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

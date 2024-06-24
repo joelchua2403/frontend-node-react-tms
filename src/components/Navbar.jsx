@@ -7,7 +7,7 @@ import '../App.css';
 
 const Navbar = () => {
   const { isAuthenticated, handleLogout } = useContext(AuthContext);
-  const { userId, setIsInGroupProjectLead, setIsInGroupDeveloper, setIsInGroupProjectManager, isInGroupProjectLead, isInGroupProjectManager, isInGroupDeveloper } = useContext(AuthContext);
+  const { userId, setIsInGroupProjectLead, setIsInGroupDeveloper, setIsInGroupProjectManager, setIsProjectLead, isInGroupProjectLead, isInGroupProjectManager, isInGroupDeveloper } = useContext(AuthContext);
 
   const { setUserGroupsIds } = useContext(GroupContext);
 
@@ -20,6 +20,8 @@ const Navbar = () => {
     setIsInGroupDeveloper(false);
     setIsInGroupProjectLead(false);
     setIsInGroupProjectManager(false);
+    setIsInGroupProjectLead(false);
+    setIsProjectLead(false);
     navigate('/login');  
   };
 

@@ -73,9 +73,6 @@ const ApplicationPage = () => {
         setIsInGroupProjectManager(currentUser.groups.includes(`${app_acronym}_Pm`));
         setIsInGroupDeveloper(currentUser.groups.includes(`${app_acronym}_Dt`));
       }
-      console.log(`${app_acronym}_Pl`);
-      console.log('User groups:', users);
-      console.log('Is in group Project Lead:', isInGroupProjectLead);
     } catch (error) {
       console.error('Error fetching user groups:', error);
     }
@@ -143,6 +140,7 @@ const ApplicationPage = () => {
           appAcronym={app_acronym}
           fetchPlans={fetchPlans}
           plans={plans}
+          isInGroupProjectManager={isInGroupProjectManager}
         />
         <div className="buttons">
           {isInGroupProjectLead && (

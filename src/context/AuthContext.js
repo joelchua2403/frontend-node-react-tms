@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [isInGroupProjectLead, setIsInGroupProjectLead] = useState(false);
   const [isInGroupProjectManager, setIsInGroupProjectManager] = useState(false);
   const [isInGroupDeveloper, setIsInGroupDeveloper] = useState(false);
+  const [isProjectLead, setIsProjectLead] = useState(false);
 
   const handleLogin = async (username, password) => {
     try {
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }) => {
       if (currentUser) {
         setUserGroups(currentUser.groups);
         setIsAdmin(currentUser.groups.includes('admin'));
+        setIsProjectLead(currentUser.groups.includes('project lead'));
       }
     } catch (error) {
       console.error('Error fetching user groups:', error);
@@ -77,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userGroups, userId, isAdmin, handleLogin, handleLogout, setIsInGroupDeveloper, setIsInGroupProjectLead, setIsInGroupProjectManager, isInGroupDeveloper, isInGroupProjectLead, isInGroupProjectManager }}>
+    <AuthContext.Provider value={{ isAuthenticated, userGroups, userId, isAdmin, handleLogin, handleLogout, setIsInGroupDeveloper, setIsInGroupProjectLead, setIsInGroupProjectManager, setIsProjectLead, isInGroupDeveloper, isInGroupProjectLead, isInGroupProjectManager, isProjectLead }}>
       {children}
     </AuthContext.Provider>
   );

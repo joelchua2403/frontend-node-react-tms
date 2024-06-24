@@ -4,7 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Styles from '../styles/PlanModal.css';
 
-const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setPlans }) => {
+const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setPlans, isInGroupProjectManager }) => {
   
   const [newPlanName, setNewPlanName] = useState('');
   const [newPlanStartDate, setNewPlanStartDate] = useState('');
@@ -66,6 +66,7 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setP
           </tbody>
         </table>
       </div>
+        {isInGroupProjectManager && (
       <div className="create-plan">
         <h3>Create New Plan</h3>
         <label>Plan Name:</label>
@@ -88,6 +89,7 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setP
         />
         <button onClick={handleCreatePlan}>Create</button>
       </div>
+        )}
     </Modal>
   );
 };
