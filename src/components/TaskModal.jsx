@@ -163,7 +163,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
             {task && task.Task_state === 'open' && (
               <>
                 <button type="button" onClick={() => handleStateChange('to-do', 'released task')}>Release</button>
-                <button type="button" onClick={() => handleSave('open')}>Save Changes</button>
+                <button type="button" onClick={() => handleSave('open')}>Save</button>
               </>
             )}
             {task && task.Task_state === 'to-do' && (

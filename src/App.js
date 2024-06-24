@@ -17,14 +17,22 @@ import ApplicationPage from './pages/ApplicationPage';
 
 
 
-const ProtectedRoute = ({ children, role }) => {
-  const { isAuthenticated, userRole} = useContext(AuthContext);
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated} = useContext(AuthContext);
   if (!isAuthenticated) {
     return <Navigate to='/login' />;
   }
   return children;
 }
 
+
+const ProtectedAdminRoute = ({ children }) => {
+  const { isAuthenticated, isAdmin} = useContext(AuthContext);
+  if (!isAuthenticated || !isAdmin) {
+    return <Navigate to='/' />;
+  }
+  return children;
+}
 function App() {
 
 
@@ -37,17 +45,15 @@ return (
       <GroupProvider>
     <Navbar  />
       <Routes>
-        <Route path='/profile' element={<ProfilePage />} />
-        <Route path='/' element={<Home />} />
-        <Route path='/createpost' element={<CreatePost/>} />
+        <Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path='/login' element={<LoginPage  />} />
-        <Route path='/register' element={<RegisterPage/>} />
-        <Route path='/application/:app_acronym' element={<ApplicationPage />} />
+        <Route path='/application/:app_acronym' element={<ProtectedRoute><ApplicationPage /></ProtectedRoute>} />
         <Route
           path='/admin'
-          element={<ProtectedRoute role='admin'><AdminPage /></ProtectedRoute>}
+          element={<ProtectedAdminRoute><AdminPage /></ProtectedAdminRoute>}
         />
-          <Route path="/groups/:groupId" element={<GroupDetail />} />
+          <Route path="/groups/:groupId" element={<ProtectedRoute><GroupDetail /></ProtectedRoute>} />
       </Routes>
       </GroupProvider>
     </AuthProvider>
