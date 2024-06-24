@@ -13,6 +13,9 @@ export const AuthProvider = ({ children }) => {
   const [userId, setUserId] = useState(Cookies.get('userId'));
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const [isInGroupProjectLead, setIsInGroupProjectLead] = useState(false);
+  const [isInGroupProjectManager, setIsInGroupProjectManager] = useState(false);
+  const [isInGroupDeveloper, setIsInGroupDeveloper] = useState(false);
 
   const handleLogin = async (username, password) => {
     try {
@@ -74,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userGroups, userId, isAdmin, handleLogin, handleLogout }}>
+    <AuthContext.Provider value={{ isAuthenticated, userGroups, userId, isAdmin, handleLogin, handleLogout, setIsInGroupDeveloper, setIsInGroupProjectLead, setIsInGroupProjectManager, isInGroupDeveloper, isInGroupProjectLead, isInGroupProjectManager }}>
       {children}
     </AuthContext.Provider>
   );

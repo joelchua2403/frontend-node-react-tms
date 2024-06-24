@@ -156,7 +156,7 @@ const AdminPage = () => {
         <h2>Create a Group</h2>
         <form onSubmit={onSubmit}>
           <label>Group Name:</label>
-          <input style={{ width: '50%' }} type="text" name="groupname" value={groupname} onChange={onChange} />
+          <input type="text" name="groupname" value={groupname} onChange={onChange} />
           <button type="submit">Create Group</button>
         </form>
       </div>

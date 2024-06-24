@@ -7,6 +7,8 @@ import '../App.css';
 
 const Navbar = () => {
   const { isAuthenticated, handleLogout } = useContext(AuthContext);
+  const { userId, setIsInGroupProjectLead, setIsInGroupDeveloper, setIsInGroupProjectManager, isInGroupProjectLead, isInGroupProjectManager, isInGroupDeveloper } = useContext(AuthContext);
+
   const { setUserGroupsIds } = useContext(GroupContext);
 
   const navigate = useNavigate();
@@ -15,6 +17,9 @@ const Navbar = () => {
   const handleLogoutClick = () => {
     handleLogout();
     setUserGroupsIds([]);
+    setIsInGroupDeveloper(false);
+    setIsInGroupProjectLead(false);
+    setIsInGroupProjectManager(false);
     navigate('/login');  
   };
 
