@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { AuthContext } from '../context/AuthContext';
 
 
+
 const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym, plans }) => {
   const [taskName, setTaskName] = useState(task ? task.Task_name : '');
   const [taskDescription, setTaskDescription] = useState(task ? task.Task_description : '');
@@ -56,7 +57,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
         Task_name: taskName ? taskName : task.Task_name,
         Task_description: taskDescription ? taskDescription : task.Task_description,
         Task_notes: updatedNotes,
-        Task_state: newState,
+        Task_state: task.Task_state,
       };
     
       if (selectedPlan) {
@@ -162,7 +163,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
             {task && task.Task_state === 'open' && (
               <>
                 <button type="button" onClick={() => handleStateChange('to-do', 'released task')}>Release</button>
-                <button type="button" onClick={() => handleSave('saved changes')}>Save Changes</button>
+                <button type="button" onClick={() => handleSave('open')}>Save Changes</button>
               </>
             )}
             {task && task.Task_state === 'to-do' && (
