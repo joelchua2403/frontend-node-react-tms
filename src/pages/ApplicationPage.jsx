@@ -101,6 +101,9 @@ const ApplicationPage = () => {
     let endpoint;
   
     switch (action) {
+        case 'saved changes':
+            endpoint = `http://localhost:3001/tasks/${task.Task_id}/Release`;
+            break;
       case 'released task':
         endpoint = `http://localhost:3001/tasks/${task.Task_id}/Release`;
         break;
