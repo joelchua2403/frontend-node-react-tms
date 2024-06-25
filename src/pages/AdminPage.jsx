@@ -164,7 +164,7 @@ const AdminPage = () => {
       {isAdmin && (
         <>
           <h2>Users</h2>
-         
+          {message && <h3>{message}</h3>}
           <div className='admin-table-container'>
           {!showCreateForm && (
             <button onClick={() => setShowCreateForm(true)}>Create User</button>
@@ -291,7 +291,7 @@ const AdminPage = () => {
               </tbody>
             </table>
           </div>
-          {message && <h3>{message}</h3>}
+         
         </>
       )}
     </div>
