@@ -11,7 +11,6 @@ const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
 
-
   const fetchUserInfo = async () => {
     const token = Cookies.get('token');
 
@@ -42,7 +41,7 @@ const ProfilePage = () => {
         }
       });
       alert('Email updated successfully');
-        setNewEmail('');
+      setNewEmail('');
       fetchUserInfo();
     } catch (error) {
       console.error('Failed to update email:', error);
@@ -64,36 +63,50 @@ const ProfilePage = () => {
         }
       });
       alert('Password updated successfully');
-        setCurrentPassword('');
-        setNewPassword('');
-        setMessage('');
+      setCurrentPassword('');
+      setNewPassword('');
+      setMessage('');
     } catch (error) {
       console.error('Failed to update password:', error);
-      setMessage(error.response.data.error)
+      setMessage(error.response.data.error);
     }
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', textAlign: 'center' }}>
       <h2>Profile Page</h2>
-      
       
       <h3>User Information</h3>
       <p>Username: {userInfo.username}</p>
       <p>Email: {userInfo.email}</p>
 
-      <form onSubmit={handleEmailChange}>
+      <form onSubmit={handleEmailChange} style={{ marginBottom: '20px' }}>
         <label>New Email:</label>
-        <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
-        <button type="submit">Update Email</button>
+        <input
+          type="email"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <button type="submit" style={{ padding: '10px 20px' }}>Update Email</button>
       </form>
 
-      <form onSubmit={handlePasswordChange}>
+      <form onSubmit={handlePasswordChange} style={{ marginBottom: '20px' }}>
         <label>Current Password:</label>
-        <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+        <input
+          type="password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
         <label>New Password:</label>
-        <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-        <button type="submit">Update Password</button>
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <button type="submit" style={{ padding: '10px 20px' }}>Update Password</button>
       </form>
       {message && <h3>{message}</h3>}
     </div>

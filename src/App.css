@@ -48,6 +48,20 @@ button.link-button:hover {
   background-color: #005792;
 }
 
+.app-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.app-link:hover {
+  background-color: #f0f0f0;
+}
+
+
 .posts-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

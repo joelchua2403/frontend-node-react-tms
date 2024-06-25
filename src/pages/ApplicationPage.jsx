@@ -82,8 +82,9 @@ const ApplicationPage = () => {
 
   const handleCreateTask = async (task) => {
     const token = Cookies.get('token');
+    const Task_app_Acronym = app_acronym;  
     try {
-      const response = await axios.post(`http://localhost:3001/tasks/create`, { ...task, app_acronym }, {
+      const response = await axios.post(`http://localhost:3001/tasks/create`, { ...task, Task_app_Acronym }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -95,20 +96,49 @@ const ApplicationPage = () => {
     }
   };
 
-  const handleSaveTask = async (task) => {
+  const handleSaveTask = async (task, action) => {
     const token = Cookies.get('token');
+    let endpoint;
+  
+    switch (action) {
+      case 'released task':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/Release`;
+        break;
+      case 'acknowledged task':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/Acknowledge`;
+        break;
+      case 'completed task':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/CompleteOrHalt`;
+        break;
+      case 'halted task':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/CompleteOrHalt`;
+        break;
+      case 'approved task':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/ApproveOrReject`;
+        break;
+      case 'rejected task':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/ApproveOrReject`;
+        break;
+      default:
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}`;
+    }
+  
     try {
-      const response = await axios.put(`http://localhost:3001/tasks/${task.Task_id}`, task, {
+      const response = await axios.put(endpoint, task, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       fetchTasks();
     } catch (error) {
-      console.error('Error updating task:', error);
-    }
+        if (error.response && error.response.status === 403 && error.response.data.message === 'Access denied') {
+      alert('You do not have permission to perform this action');
+    }  else {
+        console.error('Error updating task:', error);
   };
-
+}
+    };
+  
   const handleCloseTaskModal = () => {
     setSelectedTask(null);
     setIsTaskModalOpen(false);

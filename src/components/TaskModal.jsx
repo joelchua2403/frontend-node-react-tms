@@ -53,22 +53,24 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId}  ${action}  ${taskName || task.Task_name}`;
     const updatedNotes = `${existingNotes}\n${formattedNote}`;  
     const newTask = {
-        ...task,
-        Task_name: taskName ? taskName : task.Task_name,
-        Task_description: taskDescription ? taskDescription : task.Task_description,
-        Task_notes: updatedNotes,
-        Task_state: task.Task_state,
-      };
-    
-      if (selectedPlan) {
-        newTask.Task_plan = selectedPlan;
-      } else {
-        newTask.Task_plan = task ? task.Task_plan || '' : '';
-      }
-    onSave(newTask);
+      ...task,
+      Task_name: taskName ? taskName : task.Task_name,
+      Task_description: taskDescription ? taskDescription : task.Task_description,
+      Task_notes: updatedNotes,
+      Task_state: newState || task.Task_state,
+    };
+  
+    if (selectedPlan) {
+      newTask.Task_plan = selectedPlan;
+    } else {
+      newTask.Task_plan = task ? task.Task_plan || '' : '';
+    }
+  
+    onSave(newTask, action);
     setTaskNotes('');
     setExistingNotes(updatedNotes);
   };
+  
 
   const handleCreate = () => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || task.Task_name}`;

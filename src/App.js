@@ -1,6 +1,6 @@
 
 import Home from './pages/Home';
-import CreatePost from './pages/CreatePost';
+
 import LoginPage from './pages/LoginPage';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
@@ -11,7 +11,6 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import AdminPage from './pages/AdminPage';
 import { Navigate } from 'react-router-dom';
 import { GroupProvider } from './context/GroupContext';
-import GroupDetail from './components/GroupDetail';
 import ProfilePage from './pages/ProfilePage';
 import ApplicationPage from './pages/ApplicationPage';
 
@@ -53,7 +52,7 @@ return (
           path='/admin'
           element={<ProtectedAdminRoute><AdminPage /></ProtectedAdminRoute>}
         />
-          <Route path="/groups/:groupId" element={<ProtectedRoute><GroupDetail /></ProtectedRoute>} />
+    
       </Routes>
       </GroupProvider>
     </AuthProvider>
