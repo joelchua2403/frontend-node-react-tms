@@ -19,6 +19,18 @@ const ApplicationPage = () => {
   const [userGroups, setUserGroups] = useState([]);
     const { userId, setIsInGroupProjectLead, setIsInGroupDeveloper, setIsInGroupProjectManager, isInGroupProjectLead, isInGroupProjectManager, isInGroupDeveloper } = useContext(AuthContext);
 
+    const states = ['open', 'to-do', 'doing', 'done', 'closed'];
+
+ 
+
+  useEffect(() => {
+    fetchPlans();
+    fetchTasks();
+    if (userId && app_acronym) {
+        setIsInGroupProjectManager(false);
+    checkIsProjectManager();
+    }
+  }, [app_acronym, userId]);
 
   const fetchPlans = async () => {
     const token = Cookies.get('token');
@@ -34,15 +46,6 @@ const ApplicationPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPlans();
-    fetchTasks();
-    fetchUserGroups();
-    setIsInGroupProjectLead(false);
-    setIsInGroupProjectManager(false);
-    setIsInGroupDeveloper(false);
-  }, [app_acronym]);
-
   const fetchTasks = async () => {
     const token = Cookies.get('token');
     try {
@@ -57,28 +60,22 @@ const ApplicationPage = () => {
     }
   };
 
-  const fetchUserGroups = async (username) => {
+  const checkIsProjectManager = async () => {
     const token = Cookies.get('token');
     try {
-      const response = await axios.get('http://localhost:3001/usergroups', {
+      const response = await axios.get(`http://localhost:3001/usergroups/${userId}/${app_acronym}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      const users = response.data;
-      const currentUser = users.find(user => user.username === userId);
-      if (currentUser) {
-        setUserGroups(currentUser.groups);
-        setIsInGroupProjectLead(currentUser.groups.includes(`${app_acronym}_Pl`));
-        setIsInGroupProjectManager(currentUser.groups.includes(`${app_acronym}_Pm`));
-        setIsInGroupDeveloper(currentUser.groups.includes(`${app_acronym}_Dt`));
-      }
+      const data = response.data;
+
+      setIsInGroupProjectManager(data.isInGroupProjectManager);
+     
     } catch (error) {
       console.error('Error fetching user groups:', error);
     }
   };
-
-  const states = ['open', 'to-do', 'doing', 'done', 'closed'];
 
   const handleCreateTask = async (task) => {
     const token = Cookies.get('token');
