@@ -58,6 +58,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
       Task_description: taskDescription ? taskDescription : task.Task_description,
       Task_notes: updatedNotes,
       Task_state: newState || task.Task_state,
+      Task_owner: userId
     };
   
     if (selectedPlan) {
