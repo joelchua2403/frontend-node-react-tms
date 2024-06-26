@@ -196,10 +196,6 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
                 </div>
               ))}
             </div>
-            {console.log('userId',userId)}
-            {task &&
-            console.log('task.Task_Owner',task)}
-
             {task && task.Task_owner === userId && (
                 <>
             <textarea
@@ -209,8 +205,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
             ></textarea>
             <button type="button" onClick={handleAddNote}>Add Note</button>
             </>
-            )
-}
+            )}
           </div>
         </div>
       </form>

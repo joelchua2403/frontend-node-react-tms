@@ -6,7 +6,6 @@ const RegisterPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [role, setRole] = useState('user');
     const [message, setMessage] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
 
