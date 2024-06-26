@@ -196,12 +196,16 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
                 </div>
               ))}
             </div>
+            {task && task.Task_owner === userId && (
+                <>
             <textarea
               value={taskNotes}
               onChange={(e) => setTaskNotes(e.target.value)}
               placeholder="Write new note here..."
             ></textarea>
             <button type="button" onClick={handleAddNote}>Add Note</button>
+            </>
+            )}
           </div>
         </div>
       </form>
