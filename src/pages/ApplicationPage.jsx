@@ -17,6 +17,7 @@ const ApplicationPage = () => {
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [userGroups, setUserGroups] = useState([]);
+  const [isAbleToCreate, setIsAbleToCreate] = useState(false);
     const { userId, setIsInGroupProjectLead, setIsInGroupDeveloper, setIsInGroupProjectManager, isInGroupProjectLead, isInGroupProjectManager, isInGroupDeveloper } = useContext(AuthContext);
 
     const states = ['open', 'to-do', 'doing', 'done', 'closed'];
@@ -28,7 +29,7 @@ const ApplicationPage = () => {
     fetchTasks();
     if (userId && app_acronym) {
         setIsInGroupProjectManager(false);
-    checkIsProjectManager();
+        checkGroupPermissions();
     }
   }, [app_acronym, userId]);
 
@@ -60,7 +61,7 @@ const ApplicationPage = () => {
     }
   };
 
-  const checkIsProjectManager = async () => {
+  const checkGroupPermissions = async () => {
     const token = Cookies.get('token');
     try {
       const response = await axios.get(`http://localhost:3001/usergroups/${userId}/${app_acronym}`, {
@@ -71,6 +72,8 @@ const ApplicationPage = () => {
       const data = response.data;
 
       setIsInGroupProjectManager(data.isInGroupProjectManager);
+      setIsAbleToCreate(data.isAbleToCreate);
+      console.log(data.isAbleToCreate);
      
     } catch (error) {
       console.error('Error fetching user groups:', error);
@@ -174,10 +177,10 @@ const ApplicationPage = () => {
           appAcronym={app_acronym}
           fetchPlans={fetchPlans}
           plans={plans}
-          isInGroupProjectManager={isInGroupProjectManager}
+          checkGroupPermissions={checkGroupPermissions}
         />
         <div className="buttons">
-          {isInGroupProjectLead && (
+          {isAbleToCreate && (
             <button onClick={() => setIsTaskModalOpen(true)}>Create Task</button>
           )}
           <button onClick={() => setIsPlanModalOpen(true)}>Plans</button>
