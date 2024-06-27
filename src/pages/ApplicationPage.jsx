@@ -134,12 +134,14 @@ const ApplicationPage = () => {
       });
       fetchTasks();
     } catch (error) {
-        console.log(error.response.data.error)
         if  (error.response && error.response.status === 403 && error.response.data.error === 'You are not the Task Owner.'){
             alert('You cannot perform this action as you are not the Task Owner.');
         }  else if  (error.response && error.response.status === 403 && error.response.data.message === 'Access denied') {
             alert('You do not have permission to perform this action');
           } 
+          else if (error.response && error.response.status === 403 && error.response.data.error === 'Task has already been acknowledged by a user.'){
+            alert('Task has already been acknowledged by a user.');
+            }
     else {
         console.error('Error updating task:', error);
   };
