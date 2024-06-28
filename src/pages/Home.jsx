@@ -44,6 +44,8 @@ function Home() {
       })
       .catch((error) => {
         console.error('Error creating application:', error);
+        window.alert('Another user has already created the same application.');
+        window.location.reload();
       });
   };
 
@@ -64,7 +66,8 @@ function Home() {
         setIsModalOpen(false); // Close the modal after saving
       })
       .catch((error) => {
-        console.error('Error editing application:', error);
+        alert('Another user has editted the same application.');
+        window.location.reload();
       });
   };
 
