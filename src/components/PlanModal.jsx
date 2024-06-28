@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Styles from '../styles/PlanModal.css';
+import '../styles/PlanModal.css';
 
 const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setPlans, isInGroupProjectManager }) => {
   

@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { format } from 'date-fns';
 import { AuthContext } from '../context/AuthContext';
-
-
+import '../styles/TaskModal.css';
 
 const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym, plans }) => {
   const [taskName, setTaskName] = useState(task ? task.Task_name : '');
@@ -14,6 +11,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   const [existingNotes, setExistingNotes] = useState(task ? task.Task_notes : '');
   const [selectedPlan, setSelectedPlan] = useState(task ? task.Task_plan : '');
   const { userId } = useContext(AuthContext);
+
 
   useEffect(() => {
     if (task) {
@@ -29,89 +27,83 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     }
   }, [task]);
 
-
   const handleAddNote = () => {
     const newNote = `${new Date().toISOString()}: [${userId}] ${taskNotes}`;
     setExistingNotes(existingNotes ? `${existingNotes}\n${newNote}` : newNote);
     setTaskNotes('');
     const newTask = {
-        ...task,
-        Task_name: taskName ? taskName : task.Task_name,
-        Task_description: taskDescription ? taskDescription : task.Task_description,
-        Task_notes: `${existingNotes}\n${newNote}`
-    };
-    if (selectedPlan) {
-        newTask.Task_plan = selectedPlan;
-      } else {
-        newTask.Task_plan = task ? task.Task_plan || '' : '';
-      }
-  
-      onSave(newTask);
-  };
-
-  const handleSave = (newState, action = 'saved changes') => {
-    const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId}  ${action}  ${taskName || task.Task_name}`;
-    const updatedNotes = `${existingNotes}\n${formattedNote}`;  
-    const newTask = {
       ...task,
       Task_name: taskName ? taskName : task.Task_name,
       Task_description: taskDescription ? taskDescription : task.Task_description,
-      Task_notes: updatedNotes,
-      
-      Task_owner: userId
+      Task_notes: `${existingNotes}\n${newNote}`,
     };
-
-    if (action === 'saved changes') {
-        newTask.Task_state = task && task.Task_state;
-        } else {
-        newTask.Task_state = newState;
-        }
-  
     if (selectedPlan) {
       newTask.Task_plan = selectedPlan;
     } else {
       newTask.Task_plan = task ? task.Task_plan || '' : '';
     }
-  
+    onSave(newTask);
+  };
+
+  const handleSave = (newState, action = 'saved changes') => {
+    const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId}  ${action}  ${taskName || task.Task_name}`;
+    const updatedNotes = `${existingNotes}\n${formattedNote}`;
+    const newTask = {
+      ...task,
+      Task_name: taskName ? taskName : task.Task_name,
+      Task_description: taskDescription ? taskDescription : task.Task_description,
+      Task_notes: updatedNotes,
+      Task_owner: userId
+    };
+
+    if (action === 'saved changes') {
+      newTask.Task_state = task && task.Task_state;
+    } else {
+      newTask.Task_state = newState;
+    }
+
+    if (selectedPlan) {
+      newTask.Task_plan = selectedPlan;
+    } else {
+      newTask.Task_plan = task ? task.Task_plan || '' : '';
+    }
+
     onSave(newTask, action);
     setTaskNotes('');
     setExistingNotes(updatedNotes);
   };
-  
 
   const handleCreate = (newState, action = 'created task') => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || task.Task_name}`;
-    const updatedNotes = `${existingNotes}\n${formattedNote}`;  
-    
+    const updatedNotes = `${existingNotes}\n${formattedNote}`;
     const newTask = {
-        ...task,
-        Task_name: taskName ? taskName : task.Task_name,
-        Task_description: taskDescription ? task.taskDescription : '',
-        Task_notes: updatedNotes,
-      };
-  
-      if (selectedPlan) {
-        newTask.Task_plan = selectedPlan;
-      } else {
-        newTask.Task_plan = task ? task.Task_plan || '' : '';
-      }
-  
+      ...task,
+      Task_name: taskName ? taskName : task.Task_name,
+      Task_description: taskDescription ? task.taskDescription : '',
+      Task_notes: updatedNotes,
+    };
+
+    if (selectedPlan) {
+      newTask.Task_plan = selectedPlan;
+    } else {
+      newTask.Task_plan = task ? task.Task_plan || '' : '';
+    }
+
     onCreate(newTask);
     setTaskNotes('');
     setExistingNotes(updatedNotes);
-    };
+  };
 
-    const handleStateChange = (newState, action) => {
-        handleSave(newState, action);
-      };
-
+  const handleStateChange = (newState, action) => {
+    handleSave(newState, action);
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Task Details"
-      className="modal"
+      className={`modal`}
       overlayClassName="overlay"
     >
       <h2>Task Details</h2>
@@ -129,39 +121,39 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
             <label><b>Name:</b></label>
             <p>{task ? task.Task_name : ""}</p>
             {(!task || (task && !task.Task_state)) && (
-            <input
-              type="text"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
-              required
-            />
+              <input
+                type="text"
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+                required
+              />
             )}
           </div>
           <div>
             <label><b>Description:</b></label>
             <p>{task ? task.Task_description : ""}</p>
             {(!task || (task && !task.Task_state)) && (
-  <textarea
-    value={taskDescription}
-    onChange={(e) => setTaskDescription(e.target.value)}
-  ></textarea>
-)}
+              <textarea
+                value={taskDescription}
+                onChange={(e) => setTaskDescription(e.target.value)}
+              ></textarea>
+            )}
           </div>
           <div>
             <label><b>Plan:</b></label>
             <p>{task ? task.Task_plan : ""}</p>
             {(!task || (task && (!task.Task_state || task.Task_state === "open"))) && (
-            <select
-              value={selectedPlan}
-              onChange={(e) => setSelectedPlan(e.target.value)}
-            >
-              <option value="">Select a plan</option>
-              {plans.map((plan) => (
-                <option key={plan.Plan_MVP_name} value={plan.Plan_MVP_name}>
-                  {plan.Plan_MVP_name}
-                </option>
-              ))}
-            </select>
+              <select
+                value={selectedPlan}
+                onChange={(e) => setSelectedPlan(e.target.value)}
+              >
+                <option value="">Select a plan</option>
+                {plans.map((plan) => (
+                  <option key={plan.Plan_MVP_name} value={plan.Plan_MVP_name}>
+                    {plan.Plan_MVP_name}
+                  </option>
+                ))}
+              </select>
             )}
           </div>
           <div className="form-actions">
@@ -204,14 +196,14 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
               ))}
             </div>
             {task && task.Task_owner === userId && (
-                <>
-            <textarea
-              value={taskNotes}
-              onChange={(e) => setTaskNotes(e.target.value)}
-              placeholder="Write new note here..."
-            ></textarea>
-            <button type="button" onClick={handleAddNote}>Add Note</button>
-            </>
+              <>
+                <textarea
+                  value={taskNotes}
+                  onChange={(e) => setTaskNotes(e.target.value)}
+                  placeholder="Write new note here..."
+                ></textarea>
+                <button type="button" onClick={handleAddNote}>Add Note</button>
+              </>
             )}
           </div>
         </div>
