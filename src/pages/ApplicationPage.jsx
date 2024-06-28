@@ -102,7 +102,7 @@ const ApplicationPage = () => {
   
     switch (action) {
         case 'saved changes':
-            endpoint = `http://localhost:3001/tasks/${task.Task_id}/Release`;
+            endpoint = `http://localhost:3001/tasks/${task.Task_id}`;
             break;
       case 'released task':
         endpoint = `http://localhost:3001/tasks/${task.Task_id}/Release`;
@@ -184,6 +184,7 @@ const ApplicationPage = () => {
           fetchPlans={fetchPlans}
           plans={plans}
           checkGroupPermissions={checkGroupPermissions}
+          isInGroupProjectManager={isInGroupProjectManager}
         />
         <div className="buttons">
           {isAbleToCreate && (

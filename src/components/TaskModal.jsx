@@ -57,9 +57,15 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
       Task_name: taskName ? taskName : task.Task_name,
       Task_description: taskDescription ? taskDescription : task.Task_description,
       Task_notes: updatedNotes,
-      Task_state: newState || task.Task_state,
+      
       Task_owner: userId
     };
+
+    if (action === 'saved changes') {
+        newTask.Task_state = task && task.Task_state;
+        } else {
+        newTask.Task_state = newState;
+        }
   
     if (selectedPlan) {
       newTask.Task_plan = selectedPlan;
@@ -73,14 +79,14 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   };
   
 
-  const handleCreate = () => {
+  const handleCreate = (newState, action = 'created task') => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || task.Task_name}`;
     const updatedNotes = `${existingNotes}\n${formattedNote}`;  
     
     const newTask = {
         ...task,
         Task_name: taskName ? taskName : task.Task_name,
-        Task_description: taskDescription ? taskDescription : task.Task_description,
+        Task_description: taskDescription ? task.taskDescription : '',
         Task_notes: updatedNotes,
       };
   
