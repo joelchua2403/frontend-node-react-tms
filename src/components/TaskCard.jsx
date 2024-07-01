@@ -30,11 +30,13 @@ const TaskCard = ({ task, onOpenTask }) => {
     marginBottom: '30px', // Add space for the button
   };
 
+  const truncatedDescription = task.Task_description.length > 40 ? `${task.Task_description.slice(0, 40)}...` : task.Task_description;
+
   return (
     <div style={cardStyle}>
       <div style={textContainerStyle}>
         <p>Name: {task.Task_name}</p>
-        <p>Description: {task.Task_description}</p>
+        <p>Description: {truncatedDescription}</p>
         <p>Plan: {task.Task_plan}</p>
         <p>Owner: {task.Task_owner}</p>
       </div>
