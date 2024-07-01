@@ -1,5 +1,5 @@
 /* ApplicationModal.css */
-.modal {
+.planmodal {
     width: 50%;
     max-width: 600px;
     margin: auto;
@@ -9,7 +9,8 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
-  }
+    
+  } 
   
   .overlay {
     position: fixed;

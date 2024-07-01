@@ -122,7 +122,11 @@ const AdminPage = () => {
       setShowCreateForm(false);
       setMessage('User created successfully');
     } catch (error) {
+      if (error.response.status === 409) {
+        setMessage('Username already exists');
+      } else {
       setMessage(error.response.data.error || 'Error creating user');
+    }
     }
   };
 
