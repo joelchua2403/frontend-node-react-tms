@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/TaskModal.css';
 
-const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym, plans }) => {
+const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym, plans, isAbleToToDo, isAbleToCreate, isAbleToOpen, isAbleToDone, isAbleToDoing, isAbleToClosed }) => {
   const [taskName, setTaskName] = useState(task ? task.Task_name : '');
   const [taskDescription, setTaskDescription] = useState(task ? task.Task_description : '');
   const [taskNotes, setTaskNotes] = useState('');
@@ -27,15 +27,23 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     }
   }, [task]);
 
+  var newNoteBeforeCreateTask = ''
+  const handleAddNoteBeforeCreateTask = () => {
+    newNoteBeforeCreateTask = `${new Date().toISOString()}: [${userId}] ${taskNotes}`;
+    setExistingNotes(existingNotes ? `${newNoteBeforeCreateTask}\n${existingNotes}` : newNoteBeforeCreateTask);
+    setTaskNotes('');
+  };
+
   const handleAddNote = () => {
     const newNote = `${new Date().toISOString()}: [${userId}] ${taskNotes}`;
-    setExistingNotes(existingNotes ? `${existingNotes}\n${newNote}` : newNote);
+    setExistingNotes(existingNotes ? `${newNote}\n${existingNotes}` : newNote);
     setTaskNotes('');
     const newTask = {
       ...task,
       Task_name: taskName ? taskName : task.Task_name,
       Task_description: taskDescription ? taskDescription : task.Task_description,
-      Task_notes: `${existingNotes}\n${newNote}`,
+      Task_notes: `${newNote}\n${existingNotes}`,
+      Task_owner: userId
     };
     if (selectedPlan) {
       newTask.Task_plan = selectedPlan;
@@ -47,7 +55,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
 
   const handleSave = (newState, action = 'saved changes') => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId}  ${action}  ${taskName || task.Task_name}`;
-    const updatedNotes = `${existingNotes}\n${formattedNote}`;
+    const updatedNotes = `${formattedNote}\n${existingNotes}`;
     const newTask = {
       ...task,
       Task_name: taskName ? taskName : task.Task_name,
@@ -75,11 +83,12 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
 
   const handleCreate = (newState, action = 'created task') => {
     const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || task.Task_name}`;
-    const updatedNotes = `${existingNotes}\n${formattedNote}`;
+    const updatedNotes = `${newNoteBeforeCreateTask}\n${formattedNote}\n${existingNotes}`;
+    newNoteBeforeCreateTask = ''
     const newTask = {
       ...task,
       Task_name: taskName ? taskName : task.Task_name,
-      Task_description: taskDescription ? task.taskDescription : '',
+      Task_description: taskDescription ? taskDescription : '',
       Task_notes: updatedNotes,
     };
 
@@ -94,9 +103,34 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     setExistingNotes(updatedNotes);
   };
 
-  const handleStateChange = (newState, action) => {
-    handleSave(newState, action);
+  const handleStateChange = (state, newState, action) => {
+    let canExecute = false;
+    switch (state) {
+      case 'open':
+        canExecute = isAbleToOpen;
+        break;
+      case 'to-do':
+        canExecute = isAbleToToDo;
+        break;
+      case 'doing':
+        canExecute = isAbleToDoing;
+        break;
+      case 'done':
+        canExecute = isAbleToDone;
+        break;
+      case 'closed':
+        canExecute = isAbleToClosed;
+        break;
+      default:
+        canExecute = true; // Allow note addition and basic save by default
+    }
+    if (canExecute) {
+      handleSave(newState, action);
+    } else {
+      alert('You do not have permission to perform this action');
+    }
   };
+
 
   return (
     <Modal
@@ -163,23 +197,23 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
 
             {task && task.Task_state === 'open' && (
               <>
-                <button type="button" onClick={() => handleStateChange('to-do', 'released task')}>Release</button>
+                <button type="button" onClick={() => handleStateChange('open', 'to-do', 'released task')}>Release</button>
                 <button type="button" onClick={() => handleSave('open')}>Save</button>
               </>
             )}
             {task && task.Task_state === 'to-do' && (
-              <button type="button" onClick={() => handleStateChange('doing', 'acknowledged task')}>Acknowledge</button>
+              <button type="button" onClick={() => handleStateChange('to-do','doing', 'acknowledged task')}>Acknowledge</button>
             )}
             {task && task.Task_state === 'doing' && (
               <>
-                <button type="button" onClick={() => handleStateChange('done', 'completed task')}>Complete</button>
-                <button type="button" onClick={() => handleStateChange('to-do', 'halted task')}>Halt</button>
+                <button type="button" onClick={() => handleStateChange('doing','done', 'completed task')}>Complete</button>
+                <button type="button" onClick={() => handleStateChange('doing','to-do', 'halted task')}>Halt</button>
               </>
             )}
             {task && task.Task_state === 'done' && (
               <>
-                <button type="button" onClick={() => handleStateChange('closed', 'approved task')}>Approve</button>
-                <button type="button" onClick={() => handleStateChange('doing', 'rejected task')}>Reject</button>
+                <button type="button" onClick={() => handleStateChange('done','closed', 'approved task')}>Approve</button>
+                <button type="button" onClick={() => handleStateChange('done','doing', 'rejected task')}>Reject</button>
               </>
             )}
             <button type="button" onClick={onRequestClose}>Cancel</button>
@@ -195,16 +229,63 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
                 </div>
               ))}
             </div>
-            {task && task.Task_owner === userId && (
-              <>
-                <textarea
-                  value={taskNotes}
-                  onChange={(e) => setTaskNotes(e.target.value)}
-                  placeholder="Write new note here..."
-                ></textarea>
-                <button type="button" onClick={handleAddNote}>Add Note</button>
-              </>
-            )}
+            {task && task.Task_state === "open" && isAbleToOpen ? (
+  <>
+    <textarea
+      value={taskNotes}
+      onChange={(e) => setTaskNotes(e.target.value)}
+      placeholder="Write new note here..."
+    ></textarea>
+    <button type="button" onClick={handleAddNote}>Add Note</button>
+  </>
+) : task && task.Task_state === "to-do" && isAbleToToDo ? (
+  <>
+    <textarea
+      value={taskNotes}
+      onChange={(e) => setTaskNotes(e.target.value)}
+      placeholder="Write new note here..."
+    ></textarea>
+    <button type="button" onClick={handleAddNote}>Add Note</button>
+  </>
+) : task && task.Task_state === "doing" && isAbleToDoing ? (
+  <>
+    <textarea
+      value={taskNotes}
+      onChange={(e) => setTaskNotes(e.target.value)}
+      placeholder="Write new note here..."
+    ></textarea>
+    <button type="button" onClick={handleAddNote}>Add Note</button>
+  </>
+) : task && task.Task_state === "done" && isAbleToDone ? (
+  <>
+    <textarea
+      value={taskNotes}
+      onChange={(e) => setTaskNotes(e.target.value)}
+      placeholder="Write new note here..."
+    ></textarea>
+    <button type="button" onClick={handleAddNote}>Add Note</button>
+  </>
+) : task && task.Task_state === "closed" && isAbleToClosed ? (
+  <>
+    <textarea
+      value={taskNotes}
+      onChange={(e) => setTaskNotes(e.target.value)}
+      placeholder="Write new note here..."
+    ></textarea>
+    <button type="button" onClick={handleAddNote}>Add Note</button>
+  </>
+) : !task && isAbleToCreate ? (
+  <>
+    <textarea
+      value={taskNotes}
+      onChange={(e) => setTaskNotes(e.target.value)}
+      placeholder="Write new note here..."
+    ></textarea>
+    <button type="button" onClick={handleAddNoteBeforeCreateTask}>Add Note</button>
+  </>
+) : null}
+
+          
           </div>
         </div>
       </form>

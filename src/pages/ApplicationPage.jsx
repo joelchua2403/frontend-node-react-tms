@@ -16,9 +16,12 @@ const ApplicationPage = () => {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [userGroups, setUserGroups] = useState([]);
+    const [isAbleToToDo, setIsAbleToToDo] = useState(false);
   const [isAbleToCreate, setIsAbleToCreate] = useState(false);
-    const { userId, setIsInGroupProjectLead, setIsInGroupDeveloper, setIsInGroupProjectManager, isInGroupProjectLead, isInGroupProjectManager, isInGroupDeveloper } = useContext(AuthContext);
+  const [isAbleToDoing, setIsAbleToDoing] = useState(false);
+  const [isAbleToDone, setIsAbleToDone] = useState(false);
+  const [isAbleToOpen, setIsAbleToOpen] = useState(false);
+    const { userId, setIsInGroupProjectManager, isInGroupProjectManager } = useContext(AuthContext);
 
     const states = ['open', 'to-do', 'doing', 'done', 'closed'];
 
@@ -73,7 +76,10 @@ const ApplicationPage = () => {
 
       setIsInGroupProjectManager(data.isInGroupProjectManager);
       setIsAbleToCreate(data.isAbleToCreate);
-      console.log(data.isAbleToCreate);
+      setIsAbleToToDo(data.isAbleToToDo);
+      setIsAbleToOpen(data.isAbleToOpen);
+      setIsAbleToDoing(data.isAbleToDoing);
+      setIsAbleToDone(data.isAbleToDone);
      
     } catch (error) {
       console.error('Error fetching user groups:', error);
@@ -95,15 +101,14 @@ const ApplicationPage = () => {
       console.error('Error creating task:', error);
     }
   };
-
   const handleSaveTask = async (task, action) => {
     const token = Cookies.get('token');
     let endpoint;
-  
+
     switch (action) {
-        case 'saved changes':
-            endpoint = `http://localhost:3001/tasks/${task.Task_id}`;
-            break;
+      case 'saved changes':
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}`;
+        break;
       case 'released task':
         endpoint = `http://localhost:3001/tasks/${task.Task_id}/Release`;
         break;
@@ -123,9 +128,9 @@ const ApplicationPage = () => {
         endpoint = `http://localhost:3001/tasks/${task.Task_id}/ApproveOrReject`;
         break;
       default:
-        endpoint = `http://localhost:3001/tasks/${task.Task_id}`;
+        endpoint = `http://localhost:3001/tasks/${task.Task_id}/addnote`;
     }
-  
+
     try {
       const response = await axios.put(endpoint, task, {
         headers: {
@@ -134,24 +139,24 @@ const ApplicationPage = () => {
       });
       fetchTasks();
     } catch (error) {
-        if  (error.response && error.response.status === 403 && error.response.data.error === 'You are not the Task Owner.'){
-            alert('You cannot perform this action as you are not the Task Owner.');
-            //refresh page
-            window.location.reload();
-        }  else if  (error.response && error.response.status === 403 && error.response.data.message === 'Access denied') {
-            alert('You do not have permission to perform this action');
-          } 
-          else if (error.response && error.response.status === 403 && error.response.data.error === 'Task has already been acknowledged by a user.'){
-            alert('This action has already been performed by a user.');
-            //refresh page
-            window.location.reload();
-            }
-    else {
+      if (error.response && error.response.status === 403 && error.response.data.error === 'You are not the Task Owner.') {
+        alert('You cannot perform this action as you are not the Task Owner.');
+        // Refresh page
+        window.location.reload();
+      } else if (error.response && error.response.status === 403 && error.response.data.message === 'Access denied') {
+        alert('You do not have permission to perform this action');
+      } else if (error.response && error.response.status === 403 && error.response.data.error === 'Task has already been acknowledged by a user.') {
+        alert('This action has already been performed by a user.');
+        // Refresh page
+        window.location.reload();
+      } else {
         console.error('Error updating task:', error);
+      }
+    }
   };
-}
-    };
-  
+
+
+
   const handleCloseTaskModal = () => {
     setSelectedTask(null);
     setIsTaskModalOpen(false);
@@ -176,6 +181,11 @@ const ApplicationPage = () => {
           plans={plans}
           task={selectedTask}
           setPlans={setPlans}
+          isAbleToToDo={isAbleToToDo}
+          isAbleToCreate={isAbleToCreate}
+          isAbleToDoing={isAbleToDoing}
+          isAbleToDone={isAbleToDone}
+          isAbleToOpen={isAbleToOpen}
         />
         <PlanModal
           isOpen={isPlanModalOpen}
