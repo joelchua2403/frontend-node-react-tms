@@ -36,6 +36,41 @@ const ApplicationPage = () => {
     }
   }, [app_acronym, userId]);
 
+ 
+ // WebSocket connection
+  useEffect(() => {
+ const ws = new WebSocket('ws://localhost:3001');
+
+ ws.onopen = () => {
+   console.log('Connected to WebSocket server');
+ };
+
+ ws.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+
+  if (message.type === 'TASK_CREATED' || message.type === 'TASK_UPDATED') {
+    fetchTasks();
+  } else if (message.type === 'NOTES_UPDATED') {
+    const updatedTasks = tasks.map((task) =>
+      task.Task_id === message.task.Task_id
+        ? { ...task, Task_notes: message.task.Task_notes }
+        : task
+    );
+    setTasks(updatedTasks);
+  }
+};
+
+ ws.onclose = () => {
+   console.log('Disconnected from WebSocket server');
+ };
+
+ return () => {
+   ws.close();
+ };
+}, [app_acronym, userId]);
+
+
+
   const fetchPlans = async () => {
     const token = Cookies.get('token');
     try {
