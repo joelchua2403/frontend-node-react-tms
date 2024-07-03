@@ -14,22 +14,50 @@ function Home() {
   const { isProjectLead } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchApplications = async () => {
-      const token = Cookies.get('token');
-      try {
-        const response = await axios.get('http://localhost:3001/applications', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setApplications(response.data);
-      } catch (error) {
-        console.error('Error fetching applications:', error);
-      }
-    };
+ 
 
     fetchApplications();
   }, []);
+
+  const fetchApplications = async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get('http://localhost:3001/applications', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setApplications(response.data);
+    } catch (error) {
+      console.error('Error fetching applications:', error);
+    }
+  };
+   
+ // WebSocket connection
+ useEffect(() => {
+  const ws = new WebSocket('ws://localhost:3001');
+ 
+  ws.onopen = () => {
+    console.log('Connected to WebSocket server');
+  };
+ 
+  ws.onmessage = (event) => {
+   const message = JSON.parse(event.data);
+ 
+   if (message.type === 'APPLICATION_CREATED' || message.type === 'APPLICATION_UPDATED') {
+      fetchApplications();
+   } 
+ };
+ 
+  ws.onclose = () => {
+    console.log('Disconnected from WebSocket server');
+  };
+ 
+  return () => {
+    ws.close();
+  };
+ }, []);
+ 
 
   const handleSaveApplication = (application) => {
     const token = Cookies.get('token');
