@@ -57,6 +57,8 @@ const ApplicationPage = () => {
         : task
     );
     setTasks(updatedTasks);
+  } else if (message.type === 'PLAN_CREATED') {
+    fetchPlans();
   }
 };
 
