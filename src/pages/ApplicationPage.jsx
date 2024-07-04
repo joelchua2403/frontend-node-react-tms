@@ -51,12 +51,7 @@ const ApplicationPage = () => {
   if (message.type === 'TASK_CREATED' || message.type === 'TASK_UPDATED') {
     fetchTasks();
   } else if (message.type === 'NOTES_UPDATED') {
-    const updatedTasks = tasks.map((task) =>
-      task.Task_id === message.task.Task_id
-        ? { ...task, Task_notes: message.task.Task_notes }
-        : task
-    );
-    setTasks(updatedTasks);
+   fetchTasks();
   } else if (message.type === 'PLAN_CREATED') {
     fetchPlans();
   }
@@ -227,6 +222,7 @@ const fetchApplications = async () => {
           app_acronym={app_acronym}
           plans={plans}
           task={selectedTask}
+          tasknotes={selectedTask && selectedTask.Notes}
           setPlans={setPlans}
           isAbleToToDo={isAbleToToDo}
           isAbleToCreate={isAbleToCreate}

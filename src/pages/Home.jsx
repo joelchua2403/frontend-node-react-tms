@@ -5,7 +5,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import ApplicationModal from '../components/ApplicationModal';
 import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
 
 function Home() {
   const [applications, setApplications] = useState([]);
