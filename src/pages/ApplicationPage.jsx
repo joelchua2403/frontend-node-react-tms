@@ -23,9 +23,8 @@ const ApplicationPage = () => {
   const [isAbleToOpen, setIsAbleToOpen] = useState(false);
     const { userId, setIsInGroupProjectManager, isInGroupProjectManager } = useContext(AuthContext);
 
+    // for five state columns
     const states = ['open', 'to-do', 'doing', 'done', 'closed'];
-
- 
 
   useEffect(() => {
     fetchApplications();
@@ -137,7 +136,7 @@ const fetchApplications = async () => {
     }
   };
 
-  const handleCreateTask = async (task) => {
+  const onCreate = async (task) => {
     const token = Cookies.get('token');
     const Task_app_Acronym = app_acronym;  
     try {
@@ -152,7 +151,8 @@ const fetchApplications = async () => {
       console.error('Error creating task:', error);
     }
   };
-  const handleSaveTask = async (task, action) => {
+
+  const onSave = async (task, action) => {
     const token = Cookies.get('token');
     let endpoint;
 
@@ -192,14 +192,10 @@ const fetchApplications = async () => {
     } catch (error) {
       if (error.response && error.response.status === 403 && error.response.data.error === 'You are not the Task Owner.') {
         alert('You cannot perform this action as you are not the Task Owner.');
-        // Refresh page
-        window.location.reload();
       } else if (error.response && error.response.status === 403 && error.response.data.message === 'Access denied') {
         alert('You do not have permission to perform this action');
       } else if (error.response && error.response.status === 403 && error.response.data.error === 'Task has already been acknowledged by a user.') {
         alert('This action has already been performed by a user.');
-        // Refresh page
-        window.location.reload();
       } else {
         console.error('Error updating task:', error);
       }
@@ -226,8 +222,8 @@ const fetchApplications = async () => {
         <TaskModal
           isOpen={isTaskModalOpen}
           onRequestClose={handleCloseTaskModal}
-          onCreate={handleCreateTask}
-          onSave={handleSaveTask}
+          onCreate={onCreate}
+          onSave={onSave}
           app_acronym={app_acronym}
           plans={plans}
           task={selectedTask}

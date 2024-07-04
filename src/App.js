@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import Navbar from './components/Navbar';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import AdminPage from './pages/AdminPage';
