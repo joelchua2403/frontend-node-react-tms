@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
   const { username } = useContext(AuthContext);
@@ -40,12 +41,13 @@ const ProfilePage = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      alert('Email updated successfully');
+     
       setNewEmail('');
       fetchUserInfo();
+      toast.success('Email updated successfully');
     } catch (error) {
       console.error('Failed to update email:', error);
-      alert('Failed to update email');
+      toast.error('Failed to update email');
     }
   };
 
@@ -62,13 +64,14 @@ const ProfilePage = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      alert('Password updated successfully');
+     
       setCurrentPassword('');
       setNewPassword('');
       setMessage('');
+      toast.error('Password updated successfully');
     } catch (error) {
-      console.error('Failed to update password:', error);
       setMessage(error.response.data.error);
+      toast.error('Failed to update password');
     }
   };
 

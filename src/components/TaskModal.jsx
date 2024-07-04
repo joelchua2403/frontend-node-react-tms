@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { format } from 'date-fns';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/TaskModal.css';
+import { toast } from 'react-toastify';
 
 const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym, plans, isAbleToToDo, isAbleToCreate, isAbleToOpen, isAbleToDone, isAbleToDoing, isAbleToClosed }) => {
   const [taskName, setTaskName] = useState(task ? task.Task_name : '');
@@ -127,7 +128,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     if (canExecute) {
       handleSave(newState, action);
     } else {
-      alert('You do not have permission to perform this action');
+      toast.error('You do not have permission to perform this action');
     }
   };
 

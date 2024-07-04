@@ -7,6 +7,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import '../styles/ApplicationPage.css';
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const ApplicationPage = () => {
   const { app_acronym } = useParams();
@@ -142,6 +143,7 @@ const fetchApplications = async () => {
       });
       setTasks([...tasks, response.data]);
       setIsTaskModalOpen(false);
+      toast.success('Task created successfully');
     } catch (error) {
       console.error('Error creating task:', error);
     }
@@ -183,16 +185,17 @@ const fetchApplications = async () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      toast.success('Task updated successfully');
       fetchTasks();
     } catch (error) {
       if (error.response && error.response.status === 403 && error.response.data.error === 'You are not the Task Owner.') {
-        alert('You cannot perform this action as you are not the Task Owner.');
+        toast.error('You cannot perform this action as you are not the Task Owner.');
       } else if (error.response && error.response.status === 403 && error.response.data.message === 'Access denied') {
-        alert('You do not have permission to perform this action');
+        toast.error('You do not have permission to perform this action');
       } else if (error.response && error.response.status === 403 && error.response.data.error === 'Task has already been acknowledged by a user.') {
-        alert('This action has already been performed by a user.');
+        toast.error('This action has already been performed by a user.');
       } else {
-        console.error('Error updating task:', error);
+        toast.error('Error updating task:', error);
       }
     }
   };

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { AuthContext } from '../context/AuthContext';
 import { GroupContext } from '../context/GroupContext';
 import { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 
 const LoginPage = () => {
@@ -16,14 +17,18 @@ const onSubmit = async (e) => {
     try {
       await handleLogin(username, password);
       await fetchGroupsAndUserGroups()
+      toast.success('Login successful');
       setMessage('Login successful');
     } catch (error) {
       if (error.response && error.response.status === 401) {
+        toast.error('Invalid username or password');
         setMessage('Invalid username or password'); }
         else if (error.response && error.response.status === 540) {
+          toast.error('Your account has been disabled');
           setMessage('Your account has been disabled');
         }
        else {
+        toast.error('Login failed');
         setMessage('Login failed');
       }
     }

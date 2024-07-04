@@ -5,6 +5,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import ApplicationModal from '../components/ApplicationModal';
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 function Home() {
   const [applications, setApplications] = useState([]);
@@ -71,7 +72,7 @@ function Home() {
       })
       .catch((error) => {
         console.error('Error creating application:', error);
-        window.alert('Another user has already created the same application.');
+        toast.error('Another user has already created the same application.');
         window.location.reload();
       });
   };
@@ -93,7 +94,7 @@ function Home() {
         setIsModalOpen(false); // Close the modal after saving
       })
       .catch((error) => {
-        alert('Another user has editted the same application.');
+        toast.alert('Another user has editted the same application.');
         window.location.reload();
       });
   };

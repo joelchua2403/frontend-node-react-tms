@@ -10,6 +10,8 @@ import ProfilePage from './pages/ProfilePage';
 import ApplicationPage from './pages/ApplicationPage';
 import DisabledAccountPage from './pages/DisabledAccountPage';
 import setupInterceptors from './axiosConfig';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Protected Route for authenticated users
 const ProtectedRoute = ({ children }) => {
@@ -60,6 +62,17 @@ const MainApp = () => {
             </Routes>
           </GroupProvider>
         </AuthProvider>
+        <ToastContainer 
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </div>
   );
