@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import TaskCard from '../components/TaskCard';
 import TaskModal from '../components/TaskModal';
 import PlanModal from '../components/PlanModal';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import '../styles/ApplicationPage.css';
-import { set } from 'date-fns';
 import { AuthContext } from '../context/AuthContext';
 
 const ApplicationPage = () => {
   const { app_acronym } = useParams();
   const [tasks, setTasks] = useState([]);
   const [plans, setPlans] = useState([]);
+  const [applications, setApplications] = useState([]);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -28,6 +28,7 @@ const ApplicationPage = () => {
  
 
   useEffect(() => {
+    fetchApplications();
     fetchPlans();
     fetchTasks();
     if (userId && app_acronym) {
@@ -72,6 +73,19 @@ const ApplicationPage = () => {
 }, [app_acronym, userId]);
 
 
+const fetchApplications = async () => {
+  const token = Cookies.get('token');
+  try {
+    const response = await axios.get(`http://localhost:3001/applications/${app_acronym}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setApplications(response.data);
+  } catch (error) {
+    console.error('Error fetching applications:', error);
+  }
+};
 
   const fetchPlans = async () => {
     const token = Cookies.get('token');
@@ -208,7 +222,7 @@ const ApplicationPage = () => {
     <div className="application-page">
       <div className="header">
         <h1>{app_acronym}</h1>
-        <p>It is an application about zoo and the animals</p>
+        <p>{applications && applications.App_Description}</p>
         <TaskModal
           isOpen={isTaskModalOpen}
           onRequestClose={handleCloseTaskModal}
