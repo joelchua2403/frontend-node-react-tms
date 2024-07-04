@@ -59,7 +59,7 @@ function Home() {
  }, []);
  
 
-  const handleSaveApplication = (application) => {
+  const handleCreateApplication = (application) => {
     const token = Cookies.get('token');
     axios.post('http://localhost:3001/applications/create', application, {
       headers: {
@@ -108,7 +108,7 @@ function Home() {
       <ApplicationModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        onSave={selectedApp ? handleSaveEditedApplication : handleSaveApplication}
+        onSave={selectedApp ? handleSaveEditedApplication : handleCreateApplication}
         application={selectedApp}
       />
       <div className="app-cards">
