@@ -11,7 +11,7 @@ function Home() {
   const [applications, setApplications] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState(null);
-  const { isProjectLead } = useContext(AuthContext);
+  const { isProjectLead} = useContext(AuthContext);
 
   useEffect(() => {
  

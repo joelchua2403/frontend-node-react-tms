@@ -245,7 +245,7 @@ const ApplicationPage = () => {
           <div key={state} className="column">
             <h2>{state}</h2>
             {tasks.filter(task => task.Task_state === state).map((task) => (
-              <TaskCard key={task.id} task={task} onOpenTask={handleOpenTaskModal} />
+              <TaskCard key={task.Task_id} task={task} onOpenTask={handleOpenTaskModal} />
             ))}
           </div>
         ))}

@@ -33,7 +33,6 @@ const ApplicationModal = ({ isOpen, onRequestClose, onSave, application = null }
       }
     };
     fetchGroups();
-    console.log('isEditMode:', isEditMode, 'application:', application)
   }, []);
 
   useEffect(() => {
