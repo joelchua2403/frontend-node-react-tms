@@ -183,7 +183,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
           <div>
             <label><b>Plan:</b></label>
             <p>{task ? task.Task_plan : ""}</p>
-            {(!task || (task && (!task.Task_state || task.Task_state === "open"))) && (
+            {(!task || (task && (!task.Task_state || task.Task_state === "open" || task.Task_state === "done"))) && (
               <select
                 value={selectedPlan}
                 onChange={(e) => setSelectedPlan(e.target.value)}

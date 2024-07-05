@@ -200,6 +200,8 @@ const fetchApplications = async () => {
         toast.error('You do not have permission to perform this action');
       } else if (error.response && error.response.status === 403 && error.response.data.error === 'Task has already been acknowledged by a user.') {
         toast.error('This action has already been performed by a user.');
+      } else if (error.response && error .response.status === 400 && error.response.data.error === "Task cannot be approved if the Task_plan is reassigned") {
+        toast.error('Task cannot be approved if the Task plan is reassigned')
       } else {
         toast.error('Error updating task:', error);
       }
