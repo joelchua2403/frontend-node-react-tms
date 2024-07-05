@@ -36,7 +36,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   };
 
   const handleAddNote = () => {
-    const newNote = `${new Date().toISOString()}: [${userId}] ${taskNotes}`;
+    const newNote = `[${task.Task_state}] ${new Date().toISOString()}: [${userId}] ${taskNotes}`;
     setExistingNotes(existingNotes ? `${newNote}\n${existingNotes}` : newNote);
     setTaskNotes('');
     const newTask = {
@@ -55,7 +55,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   };
 
   const handleSave = (newState, action = 'saved changes') => {
-    const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId}  ${action}  ${taskName || task.Task_name}`;
+    const formattedNote = `[${task.Task_state}]${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: [${userId}]  ${action}  ${taskName || task.Task_name}`;
     const updatedNotes = `${formattedNote}\n${existingNotes}`;
     const newTask = {
       ...task,
