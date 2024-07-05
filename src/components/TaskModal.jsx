@@ -83,22 +83,28 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   };
 
   const handleCreate = (newState, action = 'created task') => {
-    const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || task.Task_name}`;
+    const formattedNote = `${format(new Date(), 'dd-MM-yyyy HH:mm:ss')}: ${userId} created ${taskName || (task ? task.Task_name : '')}`;
     const updatedNotes = `${newNoteBeforeCreateTask}\n${formattedNote}\n${existingNotes}`;
-    newNoteBeforeCreateTask = ''
+    newNoteBeforeCreateTask = '';
+  
+    if (!taskName) {
+      toast.error('Task name is required and cannot be null.');
+      return;
+    }
+  
     const newTask = {
       ...task,
-      Task_name: taskName ? taskName : task.Task_name,
+      Task_name: taskName,
       Task_description: taskDescription ? taskDescription : '',
       Task_notes: updatedNotes,
     };
-
+  
     if (selectedPlan) {
       newTask.Task_plan = selectedPlan;
     } else {
       newTask.Task_plan = task ? task.Task_plan || '' : '';
     }
-
+  
     onCreate(newTask);
     setTaskNotes('');
     setExistingNotes(updatedNotes);

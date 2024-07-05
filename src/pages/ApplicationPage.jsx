@@ -145,7 +145,13 @@ const fetchApplications = async () => {
       setIsTaskModalOpen(false);
       toast.success('Task created successfully');
     } catch (error) {
-      console.error('Error creating task:', error);
+      if (error.response && error.response.status === 403 && error.response.data.error === 'You do not have permission to create a task.') {
+        toast.error('You do not have permission to create a task.');
+      } else if (error.response && error.response.status === 400) {
+        toast.error('Task name is required and cannot be null.');
+      } else {
+        toast.error('An unexpected error occured.');
+      }
     }
   };
 
