@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import '../styles/PlanModal.css';
+import { toast } from 'react-toastify';
 
 const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setPlans, isInGroupProjectManager }) => {
   
@@ -32,7 +33,9 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setP
       setNewPlanStartDate('');
       setNewPlanEndDate('');
       fetchPlans();
+      toast.success('Plan created successfully');
     } catch (error) {
+      toast.error('All fields are required and cannot be null')
       console.error('Error creating plan:', error);
     }
   };

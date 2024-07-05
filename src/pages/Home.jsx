@@ -59,23 +59,26 @@ function Home() {
  }, []);
  
 
-  const handleCreateApplication = (application) => {
-    const token = Cookies.get('token');
-    axios.post('http://localhost:3001/applications/create', application, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+ const handleCreateApplication = (application) => {
+  const token = Cookies.get('token');
+  axios.post('http://localhost:3001/applications/create', application, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      setApplications([...applications, response.data]);
+      setIsModalOpen(false); // Close the modal after saving
     })
-      .then((response) => {
-        setApplications([...applications, response.data]);
-        setIsModalOpen(false); // Close the modal after saving
-      })
-      .catch((error) => {
-        console.error('Error creating application:', error);
-        toast.error('Another user has already created the same application.');
-        window.location.reload();
-      });
-  };
+    .catch((error) => {
+      console.error('Error creating application:', error.response);
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Display the error message from the server
+      } else {
+        toast.error('An unexpected error occurred'); // Display a generic error message
+      }
+    });
+};
 
   const handleEditApplication = (app) => {
     setSelectedApp(app);
@@ -91,11 +94,17 @@ function Home() {
     })
       .then((response) => {
         setApplications(applications.map(app => app.App_Acronym === application.App_Acronym ? response.data : app));
+        toast.success('Application updated successfully');
         setIsModalOpen(false); // Close the modal after saving
       })
       .catch((error) => {
-        toast.alert('Another user has editted the same application.');
-        window.location.reload();
+        if (error.response.status === 403) {
+        toast.error('You do not have permission to edit the application.');
+        } else if (error.response.status === 409) {
+        toast.error('Someone is currently editting the application.');
+        } else {
+          toast.error('An unexpected error occurred');
+        }
       });
   };
 
