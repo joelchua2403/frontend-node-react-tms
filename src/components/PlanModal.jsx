@@ -35,8 +35,12 @@ const PlanModal = ({ isOpen, onRequestClose, appAcronym, fetchPlans, plans, setP
       fetchPlans();
       toast.success('Plan created successfully');
     } catch (error) {
+      if (error.response.status === 409 && error.response.data.error === 'Plan name already exists for this application') {
+        toast.error('Plan name already exists for this application')
+      } else {
       toast.error('All fields are required and cannot be null')
       console.error('Error creating plan:', error);
+      }
     }
   };
 
