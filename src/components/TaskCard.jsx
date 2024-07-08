@@ -27,17 +27,23 @@ const TaskCard = ({ task, onOpenTask }) => {
   };
 
   const textContainerStyle = {
-    marginBottom: '30px', // Add space for the button
+    marginBottom: '25px', // Add space for the button
+  };
+
+  const headerStyle = {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    marginBottom: '3px',
   };
 
   const truncatedDescription = task.Task_description.length > 40 ? `${task.Task_description.slice(0, 40)}...` : task.Task_description;
 
   return (
     <div style={cardStyle}>
+      <div style={headerStyle}>{task.Task_plan}</div>
       <div style={textContainerStyle}>
         <p>Name: {task.Task_name}</p>
         <p>Description: {truncatedDescription}</p>
-        <p>Plan: {task.Task_plan}</p>
         <p>Owner: {task.Task_owner}</p>
       </div>
       <button style={buttonStyle} onClick={() => onOpenTask(task)}>→</button>

@@ -104,6 +104,7 @@ const AdminPage = () => {
 
       setEditMode(null);
       fetchUsers();
+      toast.success('User updated successfully');
       setMessage('User updated successfully');
     } catch (error) {
       if (error.response.status === 403) {
@@ -131,11 +132,14 @@ const AdminPage = () => {
       setNewUser({ username: '', email: '', password: '', groups: [] });
       fetchUsers();
       setShowCreateForm(false);
+      toast.success('User created successfully');
       setMessage('User created successfully');
     } catch (error) {
       if (error.response.status === 409) {
+        toast.error('Username already exists');
         setMessage('Username already exists');
       } else {
+        toast.error(error.response.data.error || 'Error creating user');
       setMessage(error.response.data.error || 'Error creating user');
     }
     }
@@ -154,8 +158,9 @@ const AdminPage = () => {
       });
       setGroups([...groups, response.data]);
       setGroupname('');
+      toast.success('Group created successfully');
     } catch (error) {
-      console.error('Error creating group:', error);
+      toast.error('Error creating group');
     }
   };
 
