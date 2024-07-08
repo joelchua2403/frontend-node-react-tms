@@ -102,7 +102,11 @@ function Home() {
         toast.error('You do not have permission to edit the application.');
         } else if (error.response.status === 409) {
         toast.error('Someone is currently editting the application.');
-        } else {
+        }
+        else if (error.response.status === 400) {
+          toast.error('App start date and App end date cannot be null')
+        }
+        else {
           toast.error('An unexpected error occurred');
         }
       });

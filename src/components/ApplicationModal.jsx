@@ -40,8 +40,8 @@ const ApplicationModal = ({ isOpen, onRequestClose, onSave, application = null }
       setName(application.App_Acronym);
       setRNumber(application.App_Rnumber);
       setDescription(application.App_Description);
-      setStartDate(application.App_startDate);
-      setEndDate(application.App_endDate);
+      setStartDate(application.App_startDate.split('T')[0]); // Extract date part
+      setEndDate(application.App_endDate.split('T')[0]); // Extract date part
       setCreateGroup(application.App_permit_Create);
       setOpenGroup(application.App_permit_Open);
       setTodoGroup(application.App_permit_toDoList);
