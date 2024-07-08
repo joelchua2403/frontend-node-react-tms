@@ -5,6 +5,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Select from 'react-select';
 import Styles from '../styles/AdminPage.css';
+import { toast } from 'react-toastify';
 
 const AdminPage = () => {
   const { isAdmin } = useContext(AuthContext);
@@ -84,6 +85,12 @@ const AdminPage = () => {
 
   const handleSaveUser = async () => {
     const token = Cookies.get('token');
+    // Prevent removing admin privileges from the admin user
+    if (editedUser.username === 'admin' && !editedUser.groups.includes('admin')) {
+      toast.error('Admin privileges cannot be removed from this user');
+      return;
+    }
+
     try {
       await axios.put(`http://localhost:3001/users/${editedUser.username}`, editedUser, {
         headers: { Authorization: `Bearer ${token}` }
@@ -99,7 +106,11 @@ const AdminPage = () => {
       fetchUsers();
       setMessage('User updated successfully');
     } catch (error) {
+      if (error.response.status === 403) {
+        toast.error('Admin privileges cannot be removed from this user')
+      } else {
       setMessage('Error updating user');
+    }
     }
   };
 
