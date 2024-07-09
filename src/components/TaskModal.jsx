@@ -107,7 +107,10 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
   
     onCreate(newTask);
     setTaskNotes('');
-    setExistingNotes(updatedNotes);
+    setExistingNotes('');
+    setTaskName('');
+    setTaskDescription('');
+    setSelectedPlan('');
   };
 
   const handleStateChange = (state, newState, action) => {
