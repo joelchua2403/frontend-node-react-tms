@@ -15,15 +15,18 @@ const TaskCard = ({ task, onOpenTask }) => {
     position: 'relative', // Ensure the button can be positioned relative to the card
   };
 
+ 
   const buttonStyle = {
     position: 'absolute',
     bottom: '10px', // Adjust as needed
     right: '10px', // Adjust as needed
     background: 'transparent',
-    border: 'none',
+    border: '1px solid #007bff',
+    borderRadius: '3px',
     cursor: 'pointer',
-    fontSize: '20px',
+    fontSize: '12px',
     color: '#007bff',
+    padding: '5px 10px',
   };
 
   const textContainerStyle = {
@@ -46,7 +49,7 @@ const TaskCard = ({ task, onOpenTask }) => {
         <p>Description: {truncatedDescription}</p>
         <p>Owner: {task.Task_owner}</p>
       </div>
-      <button style={buttonStyle} onClick={() => onOpenTask(task)}>→</button>
+      <button style={buttonStyle} onClick={() => onOpenTask(task)}>Edit</button>
     </div>
   );
 };
