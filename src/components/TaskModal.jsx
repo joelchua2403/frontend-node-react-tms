@@ -28,6 +28,11 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     }
   }, [task]);
 
+  const handlePlanChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedPlan(selectedValue === "" ? "" : selectedValue);
+  };
+
   var newNoteBeforeCreateTask = ''
   const handleAddNoteBeforeCreateTask = () => {
     newNoteBeforeCreateTask = `${new Date().toISOString()}: [${userId}] ${taskNotes}`;
@@ -62,7 +67,8 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
       Task_name: taskName ? taskName : task.Task_name,
       Task_description: taskDescription ? taskDescription : task.Task_description,
       Task_notes: updatedNotes,
-      Task_owner: userId
+      Task_owner: userId,
+      Task_plan: selectedPlan
     };
 
     if (action === 'saved changes') {
@@ -73,7 +79,10 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
 
     if (selectedPlan) {
       newTask.Task_plan = selectedPlan;
-    } else {
+    } else if (selectedPlan == ""){
+      newTask.Task_plan = "";
+    } 
+    else {
       newTask.Task_plan = task ? task.Task_plan || '' : '';
     }
 
@@ -189,7 +198,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
             {(!task || (task && (!task.Task_state || task.Task_state === "open" || task.Task_state === "done"))) && (
               <select
                 value={selectedPlan}
-                onChange={(e) => setSelectedPlan(e.target.value)}
+                onChange={handlePlanChange}
               >
                 <option value="">Select a plan</option>
                 {plans.map((plan) => (
