@@ -69,6 +69,7 @@ function Home() {
     .then((response) => {
       setApplications([...applications, response.data]);
       setIsModalOpen(false); // Close the modal after saving
+      toast.success('Application created successfully');
     })
     .catch((error) => {
       console.error('Error creating application:', error.response);
