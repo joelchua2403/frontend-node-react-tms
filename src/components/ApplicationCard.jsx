@@ -7,12 +7,17 @@ const ApplicationCard = ({ app, onEdit }) => {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
       };
+      let truncatedDescription = 'No description available';
+      if (app.App_Description) {
+        truncatedDescription = app.App_Description.length > 40 ? `${app.App_Description.slice(0, 40)}...` : app.App_Description;
+      }
+    
   return (
     <div className="app-card">
         <Link to={`/application/${app.App_Acronym}`} className="app-link">
         <p>Acronym: {app.App_Acronym}</p>
       <p>Rnum: {app.App_Rnumber}</p>
-      <p>Desc: {app.App_Description}</p>
+      <p>Desc: {truncatedDescription}</p>
       <p>Duration: {formatDate(app.App_startDate)} - {formatDate(app.App_endDate)}</p>
       </Link>
       <button onClick={() => onEdit(app)}>Edit</button>

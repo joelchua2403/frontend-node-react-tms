@@ -39,13 +39,15 @@ const TaskCard = ({ task, onOpenTask }) => {
     marginBottom: '3px',
   };
 
+  const truncatedName = task.Task_name.length > 30 ? `${task.Task_name.slice(0, 30)}...` : task.Task_name;
+
   const truncatedDescription = task.Task_description.length > 40 ? `${task.Task_description.slice(0, 40)}...` : task.Task_description;
 
   return (
     <div style={cardStyle}>
       <div style={headerStyle}>{task.Task_plan}</div>
       <div style={textContainerStyle}>
-        <p>Name: {task.Task_name}</p>
+        <p>Name: {truncatedName}</p>
         <p>Description: {truncatedDescription}</p>
         <p>Owner: {task.Task_owner}</p>
       </div>
