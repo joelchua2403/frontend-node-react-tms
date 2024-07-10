@@ -119,6 +119,7 @@ function Home() {
       {isProjectLead && (
         <button onClick={() => { setSelectedApp(null); setIsModalOpen(true); }}>Create App</button>
       )}
+      <br /> <br />
       <ApplicationModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

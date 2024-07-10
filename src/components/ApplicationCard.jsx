@@ -1,8 +1,12 @@
 // ApplicationCard.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const ApplicationCard = ({ app, onEdit }) => {
+  const { isProjectLead} = useContext(AuthContext);
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -20,7 +24,7 @@ const ApplicationCard = ({ app, onEdit }) => {
       <p>Desc: {truncatedDescription}</p>
       <p>Duration: {formatDate(app.App_startDate)} - {formatDate(app.App_endDate)}</p>
       </Link>
-      <button onClick={() => onEdit(app)}>Edit</button>
+      {isProjectLead && <button onClick={() => onEdit(app)}>Edit</button>}
     </div>
   );
 };
