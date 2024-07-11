@@ -47,6 +47,7 @@ const TaskCard = ({ task, onOpenTask }) => {
     <div style={cardStyle}>
       <div style={headerStyle}>{task.Task_plan}</div>
       <div style={textContainerStyle}>
+        <p>Task ID: {task.Task_id}</p>
         <p>Name: {truncatedName}</p>
         <p>Description: {truncatedDescription}</p>
         <p>Owner: {task.Task_owner}</p>

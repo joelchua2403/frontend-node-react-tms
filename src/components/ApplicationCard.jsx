@@ -19,8 +19,8 @@ const ApplicationCard = ({ app, onEdit }) => {
   return (
     <div className="app-card">
         <Link to={`/application/${app.App_Acronym}`} className="app-link">
+        <p>Rnum: {app.App_Rnumber}</p>
         <p>Acronym: {app.App_Acronym}</p>
-      <p>Rnum: {app.App_Rnumber}</p>
       <p>Desc: {truncatedDescription}</p>
       <p>Duration: {formatDate(app.App_startDate)} - {formatDate(app.App_endDate)}</p>
       </Link>
