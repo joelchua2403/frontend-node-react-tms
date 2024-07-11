@@ -56,6 +56,9 @@ const ApplicationPage = () => {
   } else if (message.type === 'PLAN_CREATED') {
     fetchPlans();
   }
+  else if (message.type === 'USER_UPDATE_GROUP') {
+    window.location.reload();
+ }
 };
 
  ws.onclose = () => {
@@ -150,8 +153,9 @@ const fetchApplications = async () => {
       } else if (error.response && error.response.status === 400) {
         toast.error('Task name is required and cannot be null.');
       } else {
-        toast.error('An unexpected error occured.');
+        toast.error(error.response.data.error || 'Error creating task');
       }
+      window.location.reload();
     }
   };
 

@@ -14,8 +14,6 @@ function Home() {
   const { isProjectLead} = useContext(AuthContext);
 
   useEffect(() => {
- 
-
     fetchApplications();
   }, []);
 
@@ -46,7 +44,9 @@ function Home() {
  
    if (message.type === 'APPLICATION_CREATED' || message.type === 'APPLICATION_UPDATED') {
       fetchApplications();
-   } 
+   } else if (message.type === 'USER_UPDATE_GROUP') {
+      window.location.reload();
+   }
  };
  
   ws.onclose = () => {
@@ -78,6 +78,8 @@ function Home() {
       } else {
         toast.error('An unexpected error occurred'); // Display a generic error message
       }
+     // reload the page if error
+      window.location.reload();
     });
 };
 

@@ -7,6 +7,7 @@ import Select from 'react-select';
 import Styles from '../styles/AdminPage.css';
 import { toast } from 'react-toastify';
 
+
 const AdminPage = () => {
   const { isAdmin } = useContext(AuthContext);
   const { groups, setGroups} = useContext(GroupContext);
@@ -18,10 +19,36 @@ const AdminPage = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [message, setMessage] = useState('');
 
+
   useEffect(() => {
     fetchUsers();
     fetchGroups();
   }, []);
+
+  // WebSocket connection
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:3001');
+   
+    ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+   
+    ws.onmessage = (event) => {
+     const message = JSON.parse(event.data);
+     if (message.type === 'USER_UPDATE_GROUP') {
+      fetchUsers();
+      fetchGroups();
+    }
+   };
+   
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+   
+    return () => {
+      ws.close();
+    };
+   }, []);
 
   const fetchUsers = async () => {
     const token = Cookies.get('token');
