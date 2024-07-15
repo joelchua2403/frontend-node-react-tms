@@ -128,7 +128,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
       case 'open':
         canExecute = isAbleToOpen;
         break;
-      case 'to-do':
+      case 'todo':
         canExecute = isAbleToToDo;
         break;
       case 'doing':
@@ -216,17 +216,17 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
 
             {task && task.Task_state === 'open' && (
               <>
-                <button type="button" onClick={() => handleStateChange('open', 'to-do', 'released task')}>Release</button>
+                <button type="button" onClick={() => handleStateChange('open', 'todo', 'released task')}>Release</button>
                 <button type="button" onClick={() => handleSave('open')}>Save</button>
               </>
             )}
-            {task && task.Task_state === 'to-do' && (
-              <button type="button" onClick={() => handleStateChange('to-do','doing', 'acknowledged task')}>Acknowledge</button>
+            {task && task.Task_state === 'todo' && (
+              <button type="button" onClick={() => handleStateChange('todo','doing', 'acknowledged task')}>Acknowledge</button>
             )}
             {task && task.Task_state === 'doing' && (
               <>
                 <button type="button" onClick={() => handleStateChange('doing','done', 'completed task')}>Complete</button>
-                <button type="button" onClick={() => handleStateChange('doing','to-do', 'halted task')}>Halt</button>
+                <button type="button" onClick={() => handleStateChange('doing','todo', 'halted task')}>Halt</button>
               </>
             )}
             {task && task.Task_state === 'done' && (
@@ -257,7 +257,7 @@ const TaskModal = ({ isOpen, onRequestClose, onCreate, onSave, task, app_acronym
     ></textarea>
     <button type="button" onClick={handleAddNote}>Add Note</button>
   </>
-) : task && task.Task_state === "to-do" && isAbleToToDo ? (
+) : task && task.Task_state === "todo" && isAbleToToDo ? (
   <>
     <textarea
       value={taskNotes}

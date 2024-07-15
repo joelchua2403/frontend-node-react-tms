@@ -25,7 +25,7 @@ const ApplicationPage = () => {
     const { userId, setIsInGroupProjectManager, isInGroupProjectManager } = useContext(AuthContext);
 
     // for five state columns
-    const states = ['open', 'to-do', 'doing', 'done', 'closed'];
+    const states = ['open', 'todo', 'doing', 'done', 'closed'];
 
   useEffect(() => {
     fetchApplications();
